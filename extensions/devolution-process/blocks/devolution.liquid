@@ -1,0 +1,85 @@
+<div class="main-section-container">
+
+
+  <div class="title-section">
+      <h1>{{ 'status_check.title' | t }}</h1>
+  </div>
+
+  <div class="search-returnment"> 
+      <div class="search-container-returment">
+          <input type="text" id="search-input" placeholder="Buscar estatus de devolución">
+          <button id="search-button">Buscar</button>
+      </div>
+  </div>
+
+  <div class="result-container show">
+
+
+      <div class="progress-container">
+          <div class="progress"></div>
+      </div>
+
+      <div class="container-info-returnment">
+
+          <div class="container-info-column-returnment">
+              <div class="circle done">
+                  <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#000000" fill-rule="evenodd" d="M8,0 C8.55228,0 9,0.447715 9,1 L11,1 L11,2 L13,2 C13.5523,2 14,2.44772 14,3 L14,15 C14,15.5523 13.5523,16 13,16 L3,16 C2.44772,16 2,15.5523 2,15 L2,3 C2,2.44772 2.44772,2 3,2 L5,2 L5,1 L7,1 C7,0.447715 7.44772,0 8,0 Z M5,4 L4,4 L4,14 L12,14 L12,4 L11,4 L11,5 L5,5 L5,4 Z M6,10 L10,10 C10.5523,10 11,10.4477 11,11 C11,11.51285 10.613973,11.9355092 10.1166239,11.9932725 L10,12 L6,12 C5.44772,12 5,11.5523 5,11 C5,10.48715 5.38604429,10.0644908 5.88337975,10.0067275 L6,10 Z M10,7 C10.5523,7 11,7.44772 11,8 C11,8.55228 10.5523,9 10,9 L6,9 C5.44772,9 5,8.55228 5,8 C5,7.44772 5.44772,7 6,7 L10,7 Z M8,2 C7.44772,2 7,2.44772 7,3 C7,3.55228 7.44772,4 8,4 C8.55228,4 9,3.55228 9,3 C9,2.44772 8.55228,2 8,2 Z"></path> </g></svg>
+              </div>
+          </div>
+
+          <div class="container-info-column-returnment">
+              <div class="circle">
+                  <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Layer_2" data-name="Layer 2"> <g id="invisible_box" data-name="invisible box"> <rect width="48" height="48" fill="none"></rect> </g> <g id="Layer_7" data-name="Layer 7"> <path d="M35.8,11a3.2,3.2,0,0,0-2.2-1H32V8a2.9,2.9,0,0,0-3-3H5A2.9,2.9,0,0,0,2,8V35a2.9,2.9,0,0,0,3,3H7.3a7,7,0,0,0,13.4,0h6.6a7,7,0,0,0,13.4,0H43a2.9,2.9,0,0,0,3-3V22.2Zm-2.7,3,7.3,8H32V14ZM14,39a3,3,0,1,1,3-3A2.9,2.9,0,0,1,14,39Zm20,0a3,3,0,1,1,3-3A2.9,2.9,0,0,1,34,39Z"></path> </g> </g> </g></svg>
+              </div>
+          </div>
+
+          <div class="container-info-column-returnment">
+              <div class="circle">
+                  <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill="#000000" fill-rule="evenodd" d="M8,0 C8.55228,0 9,0.447715 9,1 L11,1 L11,2 L13,2 C13.5523,2 14,2.44772 14,3 L14,15 C14,15.5523 13.5523,16 13,16 L3,16 C2.44772,16 2,15.5523 2,15 L2,3 C2,2.44772 2.44772,2 3,2 L5,2 L5,1 L7,1 C7,0.447715 7.44772,0 8,0 Z M5,4 L4,4 L4,14 L12,14 L12,4 L11,4 L11,5 L5,5 L5,4 Z M6,10 L10,10 C10.5523,10 11,10.4477 11,11 C11,11.51285 10.613973,11.9355092 10.1166239,11.9932725 L10,12 L6,12 C5.44772,12 5,11.5523 5,11 C5,10.48715 5.38604429,10.0644908 5.88337975,10.0067275 L6,10 Z M10,7 C10.5523,7 11,7.44772 11,8 C11,8.55228 10.5523,9 10,9 L6,9 C5.44772,9 5,8.55228 5,8 C5,7.44772 5.44772,7 6,7 L10,7 Z M8,2 C7.44772,2 7,2.44772 7,3 C7,3.55228 7.44772,4 8,4 C8.55228,4 9,3.55228 9,3 C9,2.44772 8.55228,2 8,2 Z"></path> </g></svg>
+              </div>
+          </div>
+
+          <div class="container-info-column-returnment">
+              <div class="circle">
+                  <svg viewBox="0 -1.5 11 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>done_mini [#1484]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-304.000000, -366.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <polygon id="done_mini-[#1484]" points="259 207.6 252.2317 214 252.2306 213.999 252.2306 214 248 210 249.6918 208.4 252.2306 210.8 257.3082 206"> </polygon> </g> </g> </g> </g></svg>
+              </div>
+          </div>
+
+      </div>
+
+      <div class="container-details-returnment">
+          <div class="details-section">
+              <div class="title-stage-returnment">
+                  <h2>Review</h2>
+              </div>
+              <div class="info-stage">
+                  <p>Review the server status</p>
+              </div>
+          </div>
+          <div class="details-section">
+              <div class="title-stage-returnment">
+                  <h2>Details</h2>
+              </div>
+              <div class="info-stage">
+                  <p></p>
+              </div>
+          </div>
+      </div>
+
+  </div>
+
+
+
+</div>
+
+{% schema %}
+  {
+    "name": "Devolution Status Check",
+    "target": "section",
+    "stylesheet": "devolution.css",
+    "settings": [
+      { "type": "product", "id": "product", "label": "product", "autofill": true },
+      { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+    ]
+  }
+{% endschema %}

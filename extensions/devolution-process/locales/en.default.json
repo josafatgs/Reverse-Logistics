@@ -1,10 +1,5 @@
 {
-  "ratings": {
-    "stars": {
-      "label": "Ratings"
-    },
-    "home": {
-      "recommendationText": "Recommended Product!"
-    }
+  "status_check": {
+    "title": "Estatus de la devolución"
   }
 }

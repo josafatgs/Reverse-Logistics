@@ -1,0 +1,147 @@
+<div class="devolution-process-section">
+
+  <div class="title-section">
+      {% comment %} <h1>Devolución</h1> {% endcomment %}
+  </div>
+
+  <div class="card show" id="card-1">
+      <h1>¿Quieres hacer una devolución?</h1>
+      <span>Escribe el numero de ticket para comenzar tú devolución</span>
+      <div class="returnment-container">
+          <div class="returnment-bar">
+              <input type="text" id="ticket-input" placeholder="Numero de Ticket">
+              <button id="next-card" class="first-button-next" data-card="1">Devolver</button>
+          </div>
+      </div>
+  </div>
+
+  <div class="card" id="card-2">
+      <h1> Numero de Orden</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <input type="text" id="order-input" placeholder="Numero de Orden">
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="2">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-3">
+      <h1> Numero de Cliente</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <input type="text" id="client-number" placeholder="Numero de Cliente">
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="3">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-4">
+      <h1> Motivo de devolución</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <select name="select">
+                  <option value="Daño paqueteria" selected>Daño de paquetería</option>
+                  <option value="Producto roto origen" >Producto roto de origen</option>
+                  <option value="Producto incorrecto">Producto incorrecto</option>
+                  <option value="Producto incompleto" >Producto incompleto</option>
+                  <option value="Producto defectuoso de fabrica">Producto defectuoso de fabrica</option>
+              </select>
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="4">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-5">
+      <h1> Comentarios</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <textarea name="textarea" id="commentaries" cols="60" rows="10"></textarea>
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="5">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-6">
+      <h1> Fecha en que recibío el producto</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <input type="date">
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="6">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-7">
+      <h1> Productos a devolver</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+
+              <div class="field-text-input">
+
+
+                  <span>SKU: </span>
+                  <input type="text" class="same-as-number">
+
+                  <span>Cantidad:</span>
+                  <input type="number">
+
+                  <input type="button" class="add-input-field" value="+"/>
+
+              </div>
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="next-card" data-card="7">Siguiente</button>
+      </div>
+  </div>
+
+  <div class="card" id="card-8">
+      <h1> Solicitud Exitosa</h1>
+
+      <div class="card-question">
+          <div class="sucess-info">
+              <p>La solicitud de devolución ha sido exitosa</p>
+              <p>Te pedimos ahora le des click al boton de continuar, para que un agente pueda atender tu solicitud por whatsapp, lo antes posible.</p>
+              <br>
+              <br>
+              <a class="whatsapp-continue" type="button" href="#">Continuar en Whatsapp</a>
+          </div>
+      </div>
+  </div>
+
+</div>
+
+{% schema %}
+  {
+    "name": "Devolution Process",
+    "target": "section",
+    "stylesheet": "process.css",
+    "javascript": "process.js",
+    "settings": [
+      { "type": "product", "id": "product", "label": "product", "autofill": true },
+      { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,29 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "1dd4dfd50b39902e7542119ddcccd275"
+name = "Reverse Logistics"
+handle = "reverse-logistics-1"
+application_url = "https://moral-invoice-goes-owned.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "quickstart-978c50de.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = ""
+
+[auth]
+redirect_urls = [
+  "https://moral-invoice-goes-owned.trycloudflare.com/auth/callback",
+  "https://moral-invoice-goes-owned.trycloudflare.com/auth/shopify/callback",
+  "https://moral-invoice-goes-owned.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-07"
+
+[pos]
+embedded = false
