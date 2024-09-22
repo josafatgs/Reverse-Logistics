@@ -3,7 +3,7 @@
 client_id = "1dd4dfd50b39902e7542119ddcccd275"
 name = "Reverse Logistics"
 handle = "reverse-logistics-1"
-application_url = "https://moral-invoice-goes-owned.trycloudflare.com"
+application_url = "https://well-expenditure-social-http.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://moral-invoice-goes-owned.trycloudflare.com/auth/callback",
-  "https://moral-invoice-goes-owned.trycloudflare.com/auth/shopify/callback",
-  "https://moral-invoice-goes-owned.trycloudflare.com/api/auth/callback"
+  "https://well-expenditure-social-http.trycloudflare.com/auth/callback",
+  "https://well-expenditure-social-http.trycloudflare.com/auth/shopify/callback",
+  "https://well-expenditure-social-http.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]

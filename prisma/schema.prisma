@@ -10,7 +10,7 @@ generator client {
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL_SHOPI")
 }
 
 model Session {
@@ -33,7 +33,7 @@ model Session {
 
 model Devolution{
   id                Int      @id @default(autoincrement())
-  status            String
+  status            String   @default("Pendiente")
   mainReason        String
   sucursal          String
   explanation       String
@@ -41,13 +41,13 @@ model Devolution{
   clientNumber      Int
   orderNumber       Int
   items             Devolution_Item[]
-  images            Devolution_Image[]
   createdAt         DateTime @default(now())
-  resolution        Resolution?
-  returnmentLabel   String
+  returnmentLabel   String   @default("")
   dateProductArrive DateTime
   shippingPayment   Boolean @default(false)
   requiresLabel     Boolean @default(false)
+  comentarios       String  @default("")
+  ndc               String  @default("")
 }
 
 model Devolution_Item{
@@ -56,27 +56,4 @@ model Devolution_Item{
   devolutionId Int
   sku          String
   quantity     Int
-}
-
-model Devolution_Image{
-  id           Int      @id @default(autoincrement())
-  devolution   Devolution @relation(fields: [devolutionId], references: [id])
-  devolutionId Int
-  image        String
-}
-
-model Resolution{
-  id           Int      @id @default(autoincrement())
-  comentarios  String
-  ndc          String
-  devolution   Devolution @relation(fields: [devolutionId], references: [id])
-  devolutionId Int @unique
-  images       Resolution_Image[]
-}
-
-model Resolution_Image{
-  id           Int        @id @default(autoincrement())
-  resolution   Resolution @relation(fields: [resolutionId], references: [id])
-  resolutionId Int
-  image        String
 }
