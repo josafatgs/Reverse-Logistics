@@ -63,7 +63,7 @@
 .progress{
   background: #1950e0;
   height: 400%;
-  width: 65%;
+  width: 0%;
   height: 10px;
   border-radius: 20px;
   display: block !important;
@@ -101,11 +101,19 @@
   justify-content: center;
   border-radius: 0 0 20px 20px;
   border: 2px solid #f5f5f5;
+  padding: 0 20px;
 }
 
 @media screen and (max-width: 768px){
   .container-details-returnment{
       flex-direction: column;
+  }
+
+}
+
+@media screen and (min-width: 768px){
+  .info-stage{
+    padding: 0 40px;
   }
 
 }
@@ -161,6 +169,41 @@
   background-color: #153bc7;
 }
 
+
+.status-label{
+  font-weight: bold;
+  font-size: xx-large;
+}
+
+.status-info-populated{
+  font-weight: 500;
+  font-size: large;
+}
+
+
+@media screen and (max-width: 768px){
+
+  .status-label{
+    font-weight: bold;
+    font-size: large;
+  }
+
+  .status-info-populated{
+    font-weight: 500;
+    font-size: small;
+  }
+
+}
+
+
+.no-result-found{
+  display: none;
+}
+
+.all-rounded{
+  border-radius: 20px;
+}
+
 .not-show {
   display: none;
 }
@@ -169,3 +212,4 @@
 .show{
   display: block;
 }
+

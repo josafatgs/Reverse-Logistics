@@ -1,7 +1,7 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "41e9bcd3adacdeb12b8dc29d2e71136f"
-name = "Reverse Logistics"
+name = "Devoluciones"
 handle = "reverse-logistics"
 application_url = "https://amy-costume-blog-fed.trycloudflare.com"
 embedded = true

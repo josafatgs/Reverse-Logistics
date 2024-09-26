@@ -10,7 +10,8 @@ generator client {
 // See https://www.prisma.io/docs/orm/reference/prisma-schema-reference#string for more information
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL_SHOPI")
+  //url = env("DATABASE_URL") // Use this one just to update the schemas
+  url      = env("DATABASE_URL_SHOPI")  // Use this one to connect to the database, the other one fails
 }
 
 model Session {
@@ -48,6 +49,10 @@ model Devolution{
   requiresLabel     Boolean @default(false)
   comentarios       String  @default("")
   ndc               String  @default("")
+  monedero          String  @default("")
+  value             Float   @default(0)
+  contacto          String  @default("")
+  subsidiaryToGo    String  @default("")
 }
 
 model Devolution_Item{

@@ -1,9 +1,9 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "1dd4dfd50b39902e7542119ddcccd275"
-name = "Reverse Logistics"
+name = "Devoluciones"
 handle = "reverse-logistics-1"
-application_url = "https://well-expenditure-social-http.trycloudflare.com"
+application_url = "https://disco-consists-none-dumb.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,9 +17,9 @@ scopes = ""
 
 [auth]
 redirect_urls = [
-  "https://well-expenditure-social-http.trycloudflare.com/auth/callback",
-  "https://well-expenditure-social-http.trycloudflare.com/auth/shopify/callback",
-  "https://well-expenditure-social-http.trycloudflare.com/api/auth/callback"
+  "https://disco-consists-none-dumb.trycloudflare.com/auth/callback",
+  "https://disco-consists-none-dumb.trycloudflare.com/auth/shopify/callback",
+  "https://disco-consists-none-dumb.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
