@@ -53,6 +53,9 @@ export async function loader({ request, params }) {
   const { admin, session } = await authenticate.admin(request);
   const devolution = await getDevolutionById(params.id, admin.graphql);
 
+  const items = devolution.items;
+  
+
   return json({
     devolution
   });
@@ -89,8 +92,9 @@ export async function action({ request, params }) {
 
 
       break;
-  }
 
+    //case (actionType)
+  }
 
   return json({ success: true });
 
