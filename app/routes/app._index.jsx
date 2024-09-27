@@ -8,9 +8,6 @@ import {
   useBreakpoints,
   IndexFilters,
   useSetIndexFiltersMode,
-  ChoiceList,
-  TextField,
-  RangeSlider
 } from "@shopify/polaris";
 
 import { authenticate } from "../shopify.server";
@@ -18,6 +15,8 @@ import { json } from "@remix-run/node";
 import { getDevolutions } from '../server/Devolution.server'
 import { useLoaderData, Link, useNavigate } from "@remix-run/react";
 import { useState, useCallback } from "react";
+
+
 
 
 export async function loader({ request }) {
@@ -31,19 +30,95 @@ export async function loader({ request }) {
 
 export default function ProductRefunds() {
 
+  //======================== LOADER DATA ========================
+
+  const { devolutions } = useLoaderData();
+  const navigate = useNavigate();
+
+  const resourceName = {
+      singular: 'Devolución',
+      plural: 'Devoluciones',
+  };
+
+
+
+  const {selectedResources, allResourcesSelected, handleSelectionChange} = useIndexResourceState(devolutions);
+
+  // ================== ROW MARKUP ==================
+
+  const devolutionMarkUp = formatRowMarkup(devolutions);
+
+  const [rowMarkup, setRowMarkup] = useState(devolutionMarkUp);
+  const handleRowMarkup = useCallback((array) => setRowMarkup(array), []);
+
+  //================= HANDLER FILTERS ==================
+
+  function filterRowMarkup(item) {
+
+    if (item == 'Todos') {
+
+      handleRowMarkup(formatRowMarkup(devolutions));
+
+      return;
+    }
+
+    const filteredDevolutions = devolutions.filter( ({ status }) => status === item);
+
+    const newDevolutions = formatRowMarkup(filteredDevolutions);
+
+    handleRowMarkup(newDevolutions);
+  }
+
+  function search(query) {
+
+      const filteredDevolutions = devolutions.filter(
+        ({ id, status, mainReason, sucursal, explanation, ticketNumber, clientNumber, orderNumber, createdAt }) => {
+
+          const search = query.toLowerCase();
+          const idString = id.toString().toLowerCase();
+          const statusString = status.toLowerCase();
+          const mainReasonString = mainReason.toLowerCase();
+          const sucursalString = sucursal.toLowerCase();
+          const explanationString = explanation.toLowerCase();
+          const ticketNumberString = ticketNumber.toString().toLowerCase();
+          const clientNumberString = clientNumber.toString().toLowerCase();
+          const orderNumberString = orderNumber.toString().toLowerCase();
+          const createdAtString = formatDate(createdAt).toLowerCase();
+
+          return (
+            idString.includes(search) ||
+            statusString.includes(search) ||
+            mainReasonString.includes(search) ||
+            sucursalString.includes(search) ||
+            explanationString.includes(search) ||
+            ticketNumberString.includes(search) ||
+            clientNumberString.includes(search) ||
+            orderNumberString.includes(search) ||
+            createdAtString.includes(search)
+          );
+        }
+      );
+
+      const newDevolutions = formatRowMarkup(filteredDevolutions);
+
+      handleRowMarkup(newDevolutions);
+  }
+
+  // ================== FILTERS ==================
+
   const [itemStrings, setItemStrings] = useState([
     'Todos',
-    'Pendientes',
-    'En Camino',
-    'En Revision',
-    'Aceptados',
-    'Rechazados',
+    'Pendiente',
+    'En camino',
+    'En revision',
+    'Aceptado',
+    'Rechazado',
   ]);
 
   const tabs = itemStrings.map((item, index) => ({
     content: item,
     index,
-    onAction: () => {},  // Put here function to filter data
+    onAction: () => { filterRowMarkup(item); },  // Put here function to filter data
     id: `${item}-${index}`,
     isLocked: index === 0,
   }));
@@ -57,66 +132,16 @@ export default function ProductRefunds() {
 
 
   const handleFiltersQueryChange = useCallback(
-    (value) => setQueryValue(value),
+    (value) => { setQueryValue(value); search(value); },
     [],
   );
 
   const onHandleCancel = () => {};
 
 
-
-
-  const { devolutions } = useLoaderData();
-  const navigate = useNavigate();
-
-  const resourceName = {
-      singular: 'Devolución',
-      plural: 'Devoluciones',
-  };
-
-  const {selectedResources, allResourcesSelected, handleSelectionChange} = useIndexResourceState(devolutions);
-
-  const rowMarkup = devolutions.map(
-      (
-          {id,status,mainReason, sucursal, explanation, ticketNumber, clientNumber, orderNumber, createdAt}
-          , index
-      ) => {
-          return (
-              <IndexTable.Row
-              id={id}
-              key={index}
-              selected={selectedResources.includes(id)}
-              position={index}
-              onClick={() => { navigate(`/app/refund/${id}`) }}
-              >
-                  <IndexTable.Cell>
-                      <Text variant="bodyMd" fontWeight="bold" as="span">
-                        #{id}
-                      </Text>
-                  </IndexTable.Cell>
-                  <IndexTable.Cell>{formatDate(createdAt)}</IndexTable.Cell>
-                  <IndexTable.Cell>
-                    {
-                        status == "Pendiente" ? <Badge progress={"complete"} tone={"critical"}>{status}</Badge> :
-                        status == "En revision" ? <Badge progress={"complete"} tone={"attention"}>{status}</Badge> :
-                        status == "En camino" ? <Badge progress={"complete"} tone={"info"}>{status}</Badge> :
-                        status == "Aceptado" ? <Badge progress={"complete"} tone={"success"}>{status}</Badge> :
-                        status == "Rechazado" ? <Badge progress={"complete"}>{status}</Badge>: ""
-                    }
-                  </IndexTable.Cell>
-                  <IndexTable.Cell>{mainReason}</IndexTable.Cell>
-                  <IndexTable.Cell>{orderNumber}</IndexTable.Cell>
-                  <IndexTable.Cell>{ticketNumber}</IndexTable.Cell>
-                  <IndexTable.Cell>{clientNumber}</IndexTable.Cell>
-                  <IndexTable.Cell>{sucursal}</IndexTable.Cell>
-
-              </IndexTable.Row>
-          );
-  });
-
   return (
 
-      <Page title="Devoluciones" fullWidth >
+      <Page title="Devoluciones" >
           <Card padding={'0'}>
             <IndexFilters
 
@@ -170,27 +195,6 @@ export default function ProductRefunds() {
       </Page>
   );
 
-  function disambiguateLabel(key, value) {
-    switch (key) {
-      case 'moneySpent':
-        return `Money spent is between $${value[0]} and $${value[1]}`;
-      case 'taggedWith':
-        return `Tagged with ${value}`;
-      case 'accountStatus':
-        return (value).map((val) => `Customer ${val}`).join(', ');
-      default:
-        return value;
-    }
-  }
-
-  function isEmpty(value) {
-    if (Array.isArray(value)) {
-      return value.length === 0;
-    } else {
-      return value === '' || value == null;
-    }
-  }
-
   function formatDate(dateString) {
 
     const months = [
@@ -203,5 +207,45 @@ export default function ProductRefunds() {
     const year = date.getFullYear();
     return `${day} de ${month} de ${year}`;
 
+  }
+
+  function formatRowMarkup(array) {
+    return array.map(
+      (
+        {id,status,mainReason, sucursal, explanation, ticketNumber, clientNumber, orderNumber, createdAt}
+        , index
+      ) => {
+        return (
+          <IndexTable.Row
+            id={id}
+            key={index}
+            selected={selectedResources.includes(id)}
+            position={index}
+            onClick={() => { navigate(`/app/refund/${id}`) }}
+          >
+            <IndexTable.Cell>
+              <Text variant="bodyMd" fontWeight="bold" as="span">
+                #{id}
+              </Text>
+            </IndexTable.Cell>
+            <IndexTable.Cell>{formatDate(createdAt)}</IndexTable.Cell>
+            <IndexTable.Cell>
+              {
+                status == "Pendiente" ? <Badge progress={"complete"} tone={"critical"}>{status}</Badge> :
+                status == "En revision" ? <Badge progress={"complete"} tone={"attention"}>{status}</Badge> :
+                status == "En camino" ? <Badge progress={"complete"} tone={"info"}>{status}</Badge> :
+                status == "Aceptado" ? <Badge progress={"complete"} tone={"success"}>{status}</Badge> :
+                status == "Rechazado" ? <Badge progress={"complete"}>{status}</Badge>: ""
+              }
+            </IndexTable.Cell>
+            <IndexTable.Cell>{mainReason}</IndexTable.Cell>
+            <IndexTable.Cell>{orderNumber}</IndexTable.Cell>
+            <IndexTable.Cell>{ticketNumber}</IndexTable.Cell>
+            <IndexTable.Cell>{clientNumber}</IndexTable.Cell>
+            <IndexTable.Cell>{sucursal}</IndexTable.Cell>
+          </IndexTable.Row>
+        );
+      }
+    );
   }
 }

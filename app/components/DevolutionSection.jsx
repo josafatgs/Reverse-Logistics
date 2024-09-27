@@ -84,6 +84,7 @@ function DevolutionSection({
 
             </Box>
       </Box>
+      
       )}
 
       <Divider/>

@@ -1,5 +1,8 @@
 import db from "../db.server";
 
+export async function getProductData(sku, graphql){
+  
+}
 
 export async function getDevolutions(graphql) {
     const devolutions = await db.devolution.findMany({
@@ -79,9 +82,11 @@ export async function updateShippingPayment(devolutionId, shippingPayment) {
 
     try {
 
+        const value = shippingPayment == 'true' ? true : false;
+
         const res = await db.devolution.update({
             where: { id: Number(devolutionId) },
-            data: { shippingPayment: Boolean(shippingPayment) }
+            data: { shippingPayment: value }
         });
 
         // Delete on Production
@@ -102,9 +107,11 @@ export async function updateRequiresLabel(devolutionId, requiereLabel) {
 
     try {
 
+        const value = requiereLabel == 'true' ? true : false;
+
         const res = await db.devolution.update({
             where: { id: Number(devolutionId) },
-            data: { requiresLabel: Boolean(requiereLabel) }
+            data: { requiresLabel: value }
         });
 
         // Delete on Production

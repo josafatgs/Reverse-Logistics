@@ -45,13 +45,8 @@ import {
 
 import DevolutionSection from "../components/DevolutionSection";
 import Order from "../components/Order";
-import SaveInfoModal from "../components/SaveInfoModal";
+import Products from "../components/Products";
 
-/**
- * Actualizar datos cuando de clic en guarda
- * Obtener la info del producto de bd y mostrarla
- * Funcion para subir imagenes y obtener la url para guardarla en bd
- * */
 
 export async function loader({ request, params }) {
 
@@ -79,6 +74,8 @@ export async function action({ request, params }) {
       const creditNote = formData.get("ndc");
       const money = formData.get("value");
       const subsidiaryToGo = formData.get("subsidiaryToGo");
+
+      console.log(requieredShipping, paymentDone);
 
       await updateStatus(params.id, status);
       await updateSubsidiary(params.id, subsidiary);
@@ -112,7 +109,7 @@ export default function Refund() {
         statusSelect: stateSelected,
         subsidiarySelect: subsidiarySelected,
         paymentDone: paymentShipping,
-        requiredShipping: requiresShipping === 'shipping' ? true : false,
+        requiredShipping: requiresShipping == 'shipping' ? true : false,
         comentarios: commentariesText,
         wallet: walletText,
         ndc: creditNoteText,
@@ -127,13 +124,13 @@ export default function Refund() {
   // ======================= DEVOLUTION SECTION ===========================
   const [paymentShipping, setPaymentShipping] = useState(devolution.shippingPayment);
   const handlePaymentShipping = useCallback(
-    (newChecked) => setPaymentShipping(newChecked),
+    (newChecked) => {setPaymentShipping(newChecked); console.log(newChecked)},
     [],
   );
 
-  const [requiresShipping, setRequireShipping] = React.useState('shipping');
+  const [requiresShipping, setRequireShipping] = React.useState(devolution.requiresLabel ? 'shipping' : 'noShipping');
   const handleRequiresShipping = useCallback(
-    (_, newValue) => setRequireShipping(newValue),
+    (_, newValue) => {setRequireShipping(newValue); console.log(newValue)},
     []
   );
 
@@ -175,6 +172,12 @@ export default function Refund() {
         <Divider borderColor="transparent" borderWidth={'025'} />
         <Divider borderColor="transparent" borderWidth={'025'} />
       </>
+    )
+  });
+
+  const handleArticlesList = devolution.items.map((item) => {
+    return (
+      Products(item.quantity)
     )
   });
 
@@ -220,11 +223,6 @@ export default function Refund() {
 
 
   // ================== RESOLUTION SECTION ============================
-  const [resolutionOption, setResolutionOption] = React.useState(stateSelected === 'Aceptado' ? 'accept' : 'denied');
-  const handleChangeResolutionOption = useCallback(
-    (_, newValue) => setResolutionOption(newValue),
-    []
-  );
 
   const [creditNoteText, setCreditNoteText] = useState(devolution.ndc);
   const handleCreditNoteText = useCallback((value) => setCreditNoteText(value), []);
@@ -368,7 +366,7 @@ export default function Refund() {
 
               <Box padding="200">
 
-                <Box paddingBlock="200">
+                {/* <Box paddingBlock="200">
                   <InlineGrid columns={['oneHalf', 'oneHalf']}>
                     <Grid.Cell >
                       <Text as="p" variant="bodySm">
@@ -386,6 +384,10 @@ export default function Refund() {
                     <Divider borderColor="transparent" borderWidth={'100'} />
                     {handleArticles}
                   </InlineGrid>
+                </Box> */}
+
+                <Box paddingBlock="200">
+                  { handleArticlesList }
                 </Box>
 
               </Box>
@@ -424,15 +426,8 @@ export default function Refund() {
 
               <Box borderStartEndRadius={'200'}>
                 <Box>
-                  <RadioButton
-                    label="Aceptar Devolución"
-                    checked={resolutionOption === 'accept'}
-                    id="acceptDevolution"
-                    name="Accept Label"
-                    onChange={() => handleChangeResolutionOption(true, "accept")}
-                  />
 
-                  {resolutionOption == 'accept' && (
+                  {stateSelected == 'Aceptado' && (
                     <Box padding={'200'}>
                       <InlineGrid columns={2} gap={'1000'}>
                         <Grid.Cell>
@@ -484,21 +479,8 @@ export default function Refund() {
             <Divider />
 
             <Box padding={'400'}>
-              <Box borderStartEndRadius={'200'}>
-                <Box>
-                  <RadioButton
-                    label="Rechazar Devolución"
-                    checked={resolutionOption === 'denied'}
-                    id="deniedDevolution"
-                    name="Denied Label"
-                    onChange={() => handleChangeResolutionOption(true, "denied")}
-                  />
-                </Box>
-              </Box>
 
-
-
-              {resolutionOption == 'denied' && (
+              {stateSelected == 'Rechazado' && (
                 <>
                   <TextField
                     label="Comentarios"
@@ -560,10 +542,6 @@ export default function Refund() {
 
         </Layout.Section>
       </Layout>
-
-
-
-      {/* <SaveInfoModal show={saveModal} toggleModal={setSaveModal} /> */}
 
     </Page>
   );
