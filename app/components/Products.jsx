@@ -7,7 +7,7 @@ import {
 } from '@shopify/polaris';
 
 
-export default function Products(qty) {
+export default function Products(qty, url, alt, price, title) {
 
 
   return (

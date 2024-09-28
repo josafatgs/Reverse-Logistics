@@ -49,18 +49,64 @@ import Products from "../components/Products";
 
 
 export async function loader({ request, params }) {
-
   const { admin, session } = await authenticate.admin(request);
   const devolution = await getDevolutionById(params.id, admin.graphql);
 
   const items = devolution.items;
-  
+
+  const itemDetails = [];
+  for (const item of items) {
+    if (!item.sku) {
+      throw new Error(`Item with no SKU found: ${JSON.stringify(item)}`);
+    }
+
+    const response = await admin.graphql(
+      `#graphql
+      query productInfo($sku: String) {
+        products(first: 1, query: $sku) {
+          edges {
+            node {
+              id
+              title
+              media(first: 1) {
+                edges {
+                  node {
+                    alt
+                    ... on MediaImage {
+                      image {
+                        url
+                      }
+                    }
+                  }
+                }
+              }
+              variants(first: 1) {
+                edges {
+                  node {
+                    id
+                    sku
+                    price
+                  }
+                }
+              }
+            }
+          }
+        }
+      }`,
+      { sku: "sku: sku-hosted-1" }
+    );
+
+    const data = await response.json();
+    itemDetails.push({ [item.sku] : data.data});
+  }
 
   return json({
-    devolution
+    devolution,
+    itemDetails,
   });
-
 }
+
+
 
 export async function action({ request, params }) {
   const formData = await request.formData();
@@ -78,8 +124,6 @@ export async function action({ request, params }) {
       const money = formData.get("value");
       const subsidiaryToGo = formData.get("subsidiaryToGo");
 
-      console.log(requieredShipping, paymentDone);
-
       await updateStatus(params.id, status);
       await updateSubsidiary(params.id, subsidiary);
       await updateRequiresLabel(params.id, requieredShipping);
@@ -93,7 +137,6 @@ export async function action({ request, params }) {
 
       break;
 
-    //case (actionType)
   }
 
   return json({ success: true });
@@ -102,7 +145,8 @@ export async function action({ request, params }) {
 
 export default function Refund() {
 
-  const { devolution } = useLoaderData();
+  const { devolution, itemDetails } = useLoaderData();
+  console.log(itemDetails);
   const action = useActionData();
   const fetcher = useFetcher();
 
@@ -128,13 +172,13 @@ export default function Refund() {
   // ======================= DEVOLUTION SECTION ===========================
   const [paymentShipping, setPaymentShipping] = useState(devolution.shippingPayment);
   const handlePaymentShipping = useCallback(
-    (newChecked) => {setPaymentShipping(newChecked); console.log(newChecked)},
+    (newChecked) => {setPaymentShipping(newChecked);},
     [],
   );
 
   const [requiresShipping, setRequireShipping] = React.useState(devolution.requiresLabel ? 'shipping' : 'noShipping');
   const handleRequiresShipping = useCallback(
-    (_, newValue) => {setRequireShipping(newValue); console.log(newValue)},
+    (_, newValue) => {setRequireShipping(newValue);},
     []
   );
 
@@ -180,8 +224,16 @@ export default function Refund() {
   });
 
   const handleArticlesList = devolution.items.map((item) => {
+    const foundItem = items.find(item => item[skuToFind] !== undefined);
+    console.log(foundItem);
+    const price = foundItem.products.edges[0].node.variants.edges[0].node.price
+    const url = foundItem.products.edges[0].node.title.media.edges[0].node.image.url
+    const alt = foundItem.products.edges[0].node.title.media.edges[0].node.alt
+    const title = foundItem.products.edges[0].node.title
+
+
     return (
-      Products(item.quantity)
+      Products(item.qty)
     )
   });
 
