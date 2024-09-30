@@ -1,175 +1,204 @@
 const data = {
-    "subsidiary": "",
-    "main_reason": "",
-    "explanation": "",
-    "ticket_number": "",
-    "client_number": "",
-    "order_number": "",
-    "items": [],
-    "date_product_arrived": ""
+  "subsidiary": "",
+  "main_reason": "",
+  "explanation": "",
+  "ticket_number": "",
+  "client_number": "",
+  "order_number": "",
+  "items": [],
+  "date_product_arrived": "",
+  "phone_number": ""
+};
+
+function validateField(value, fieldName) {
+  if (value === "") {
+      alert(`El campo ${fieldName} es obligatorio.`);
+      return false;
+  }
+  return true;
 }
 
 function clearData() {
+  // Limpiar los datos
+  data.subsidiary = "";
+  data.main_reason = "";
+  data.explanation = "";
+  data.ticket_number = "";
+  data.client_number = "";
+  data.order_number = "";
+  data.items = [];
+  data.date_product_arrived = "";
+  data.phone_number = "";
 
-    // Limpiar los datos
-    data.subsidiary = "";
-    data.main_reason = "";
-    data.explanation = "";
-    data.ticket_number = "";
-    data.client_number = "";
-    data.order_number = "";
-    data.items = [];
-    data.date_product_arrived = "";
-    document.getElementById('ticket-input').value = "";
-    document.getElementById('order-input').value = "";
-    document.getElementById('client-number').value = "";
-    document.getElementById('reason-input').value = "";
-    document.getElementById('subsidiary-input').value = "";
-    document.getElementById('commentaries').value = "";
-    document.getElementById('date-input').value = "";
-    document.getElementById('sku-input').value = "";
-    document.getElementById('qty-input').value = "";
-    const productTableBody = document.querySelector('#product-table tbody');
-    productTableBody.innerHTML = "";
+  document.getElementById('ticket-input').value = "";
+  document.getElementById('order-input').value = "";
+  document.getElementById('client-number').value = "";
+  document.getElementById('reason-input').value = "";
+  document.getElementById('subsidiary-input').value = "";
+  document.getElementById('commentaries').value = "";
+  document.getElementById('date-input').value = "";
+  document.getElementById('sku-input').value = "";
+  document.getElementById('qty-input').value = "";
+  document.getElementById('phone-number').value = "";
 
+  const productTableBody = document.querySelector('#product-table tbody');
+  productTableBody.innerHTML = "";
 }
 
-const showFolio = (data) => {
+function showNextCard(currentCard, nextCard) {
+  // Hide the current card
+  document.getElementById(`card-${currentCard}`).classList.remove("show");
 
-    // Limpiar los datos
-    clearData();
+  // Show the next card
+  if (document.getElementById(`card-${nextCard}`)) {
+      document.getElementById(`card-${nextCard}`).classList.add("show");
+  }
+}
 
-    // Mostrar folio
-    const folio = document.getElementById('folio-number');
-    folio.textContent = data.id; // Cambiar el número de folio
+function showPreviosCard(currentCard) {
+  const previosCard = parseInt(currentCard) - 1;
 
-    // Cambiar mensaje whatsapp
-    const anchor = document.getElementById('whatsapp-anchor');
-    const url = `https://api.whatsapp.com/send?phone=573002222222&text=Hola, necesito hacer una devolución. Mi número de folio es ${data.id}.`; // Cambiar el número de teléfono & el número de folio
-    anchor.href = url;
+  // Hide the current card
+  document.getElementById(`card-${currentCard}`).classList.remove("show");
 
+  // Show the previous card
+  if (document.getElementById(`card-${previosCard}`)) {
+      document.getElementById(`card-${previosCard}`).classList.add("show");
+  }
+}
+
+function showFolio(info) {
+  // Limpiar los datos
+  clearData();
+
+  // Mostrar folio
+  const folio = document.getElementById('folio-number');
+  folio.innerHTML = info.id; // Cambiar el número de folio
+
+  // Cambiar mensaje whatsapp
+  const anchor = document.getElementById('whatsapp-anchor');
+  const url = `https://api.whatsapp.com/send?phone=522211939333&text=Hola, necesito hacer una *devolución*. Mi número de folio es *${info.id}*.`; // Cambiar el número de teléfono & el número de folio
+  anchor.href = url;
+
+  showNextCard(9, 10);
 }
 
 function sendData() {
-    alert("Datos enviados correctamente");
-    console.log(data);
 
-    // Enviar los datos a un servidor
-    fetch( "http://18.191.127.106:8080/devolution", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        showFolio(data);
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-    });
+  if (document.querySelector('.sucess-info').classList.contains('show-result-info')) {
+    document.querySelector('.sucess-info').classList.remove('show-result-info');
+  }
+  if (document.querySelector('.error-info').classList.contains('show-result-info')) {
+    document.querySelector('.error-info').classList.remove('show-result-info')
+  }
+
+  const url = window.location.origin + "/apps/store-return/";
+
+  document.getElementById('loading-spinner').style.display = 'block';
+
+  // Enviar los datos a un servidor
+  fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(res => {
+      document.getElementById('loading-spinner').style.display = 'none';
+      document.querySelector('.sucess-info').classList.add('show-result-info');
+      showFolio(res.devolution);
+  })
+  .catch((error) => {
+      console.error('Error:', error);
+      document.getElementById('loading-spinner').style.display = 'none';
+      document.querySelector('.error-info').classList.add('show-result-info');
+  });
 }
-
-function getDataFromEndpoint(url) {
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json(); // Parse the JSON data from the response
-        })
-        .then(data => {
-            console.log(data); // Aquí puedes manejar la respuesta
-        })
-        .catch(error => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-}
-
-function postDataToEndpoint() {
-    const url = 'https://jsonplaceholder.typicode.com/posts';
-    const data = {
-        title: 'foo',
-        body: 'bar',
-        userId: 1
-    };
-
-    fetch(url, {
-        method: 'POST', // Specify the method as POST
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data) // Convert the data object to JSON
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        return response.json(); // Parse the response as JSON
-    })
-    .then(data => {
-        console.log('Success:', data); // Handle the data
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
 
 const cards = document.querySelectorAll(".card");
 const nextButtons = document.querySelectorAll("#next-card");
+const previosButtons = document.querySelectorAll("#previus-card");
 
 // Show the first card on page load
 cards[0].classList.add("show");
 
 // Event listener for next buttons
 nextButtons.forEach(button => {
-    button.addEventListener("click", function() {
-        const currentCard = this.getAttribute("data-card");
-        const nextCard = parseInt(currentCard) + 1;
+  button.addEventListener("click", function() {
+      const currentCard = this.getAttribute("data-card");
+      const nextCard = parseInt(currentCard) + 1;
 
-        switch (currentCard) {
-            case '1':
-                data.ticket_number = document.getElementById('ticket-input').value;
-                break;
-            case '2':
-                data.order_number = document.getElementById('order-input').value;
-                break;
-            case '3':
-                data.client_number = document.getElementById('client-number').value;
-                break;
-            case '4':
-                data.main_reason = document.getElementById('reason-input').value;
-                break;
-            case '5':
-                data.subsidiary = document.getElementById('subsidiary-input').value;
-                break;
-            case '6':
-                data.explanation = document.getElementById('commentaries').value;
-                break;
-            case '7':
-                data.date_product_arrived = document.getElementById('date-input').value + "00:00:00.000";
-                break;
-            case '8':
-                const sku = document.getElementById('sku-input').value;
-                const qty = Number(document.getElementById('qty-input').value);
-                data.items.push({ "sku": sku, "cantidad": qty });
-                sendData();
-                getDataFromEndpoint('https://dogapi.dog/api/v2/breeds');
-                postDataToEndpoint();
-                break;
-        }
+      switch (currentCard) {
+          case '1':
+              const ticketNumber = document.getElementById('ticket-input').value;
+              if (validateField(ticketNumber, "Número de Ticket")) {
+                  data.ticket_number = ticketNumber;
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '2':
+              data.order_number = document.getElementById('order-input').value;
+              showNextCard(currentCard, nextCard);
+              break;
+          case '3':
+              const clientNumber = document.getElementById('client-number').value;
+              if (validateField(clientNumber, "Número de Cliente")) {
+                  data.client_number = clientNumber;
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '4':
+              const mainReason = document.getElementById('reason-input').value;
+              if (validateField(mainReason, "Motivo de Devolución")) {
+                  data.main_reason = mainReason;
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '5':
+              const subsidiary = document.getElementById('subsidiary-input').value;
+              if (validateField(subsidiary, "Lugar de Compra")) {
+                  data.subsidiary = subsidiary;
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '6':
+              data.explanation = document.getElementById('commentaries').value;
+              showNextCard(currentCard, nextCard);
+              break;
+          case '7':
+              const dateProductArrived = document.getElementById('date-input').value;
+              if (validateField(dateProductArrived, "Fecha de Recepción del Producto")) {
+                  data.date_product_arrived = dateProductArrived + " 00:00:00.000";
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '8':
+              const sku = document.getElementById('sku-input').value;
+              const qty = Number(document.getElementById('qty-input').value);
+              if (validateField(sku, "SKU") && validateField(qty, "Cantidad")) {
+                  data.items.push({ "sku": sku, "cantidad": qty });
+                  showNextCard(currentCard, nextCard);
+              }
+              break;
+          case '9':
+              const phoneNumber = document.getElementById('phone-number').value;
+              if (validateField(phoneNumber, "Número de Teléfono")) {
+                  data.phone_number = phoneNumber;
+                  sendData();
+              }
+              break;
+      }
+  });
+});
 
-        // Hide the current card
-        document.getElementById(`card-${currentCard}`).classList.remove("show");
-
-        // Show the next card
-        if (document.getElementById(`card-${nextCard}`)) {
-            document.getElementById(`card-${nextCard}`).classList.add("show");
-        }
-    });
+// Event listener for previous buttons
+previosButtons.forEach(button => {
+  button.addEventListener("click", function() {
+      const currentCard = this.getAttribute("data-card");
+      showPreviosCard(currentCard);
+  });
 });
 
 // Capturamos el botón y los inputs
@@ -180,37 +209,45 @@ const productTableBody = document.querySelector('#product-table tbody');
 
 // Evento para agregar productos
 addProductButton.addEventListener('click', () => {
-    const sku = skuInput.value;
-    const qty = Number(qtyInput.value);
+  const sku = skuInput.value;
+  const qty = Number(qtyInput.value);
 
-    data.items.push({ "sku": sku, "cantidad": qty });
+  if (validateField(sku, "SKU") && validateField(qty, "Cantidad")) {
+      data.items.push({ "sku": sku, "cantidad": qty });
 
-    // Validar que los campos no estén vacíos
-    if (sku !== "" && qty !== "") {
-        // Crear una nueva fila en la tabla
-        const newRow = document.createElement('tr');
+      // Crear una nueva fila en la tabla
+      const newRow = document.createElement('tr');
 
-        // Crear celdas para SKU y cantidad
-        const skuCell = document.createElement('td');
-        skuCell.textContent = sku;
+      // Crear celdas para SKU y cantidad
+      const skuCell = document.createElement('td');
+      skuCell.textContent = sku;
 
-        const cantidadCell = document.createElement('td');
-        cantidadCell.textContent = qty;
+      const cantidadCell = document.createElement('td');
+      cantidadCell.textContent = qty;
 
-        // Agregar las celdas a la fila
-        newRow.appendChild(skuCell);
-        newRow.appendChild(cantidadCell);
+      // Agregar las celdas a la fila
+      newRow.appendChild(skuCell);
+      newRow.appendChild(cantidadCell);
 
-        // Agregar la fila a la tabla
-        productTableBody.appendChild(newRow);
+      // Agregar la fila a la tabla
+      productTableBody.appendChild(newRow);
 
-        // Limpiar los inputs después de agregar el producto
-        skuInput.value = '';
-        qtyInput.value = '';
-    } else {
-        alert("Por favor, llena ambos campos (SKU y Cantidad).");
-    }
+      // Limpiar los inputs después de agregar el producto
+      skuInput.value = '';
+      qtyInput.value = '';
+  }
 });
 
 
+const tooltips = document.querySelectorAll(".tooltip");
 
+tooltips.forEach(tooltip => {
+  tooltip.addEventListener( 'click', () => {
+    const tooltipText = tooltip.querySelector('.tooltiptext');
+    if (tooltipText.classList.contains('show-tooltip')){
+      tooltipText.classList.remove('show-tooltip');
+    } else {
+      tooltipText.classList.add('show-tooltip');
+    }
+  });
+});

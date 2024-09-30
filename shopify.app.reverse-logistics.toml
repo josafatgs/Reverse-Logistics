@@ -3,7 +3,7 @@
 client_id = "1dd4dfd50b39902e7542119ddcccd275"
 name = "Devoluciones"
 handle = "reverse-logistics-1"
-application_url = "https://went-renewable-ou-pk.trycloudflare.com"
+application_url = "https://bolt-childhood-mere-durham.trycloudflare.com"
 embedded = true
 
 [build]
@@ -17,13 +17,18 @@ scopes = "read_products"
 
 [auth]
 redirect_urls = [
-  "https://went-renewable-ou-pk.trycloudflare.com/auth/callback",
-  "https://went-renewable-ou-pk.trycloudflare.com/auth/shopify/callback",
-  "https://went-renewable-ou-pk.trycloudflare.com/api/auth/callback"
+  "https://bolt-childhood-mere-durham.trycloudflare.com/auth/callback",
+  "https://bolt-childhood-mere-durham.trycloudflare.com/auth/shopify/callback",
+  "https://bolt-childhood-mere-durham.trycloudflare.com/api/auth/callback"
 ]
 
 [webhooks]
 api_version = "2024-07"
+
+[app_proxy]
+url = "https://bolt-childhood-mere-durham.trycloudflare.com/app/proxy"
+subpath = "store-return"
+prefix = "apps"
 
 [pos]
 embedded = false

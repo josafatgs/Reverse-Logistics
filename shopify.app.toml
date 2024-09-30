@@ -29,5 +29,10 @@ api_version = "2024-07"
   topics = [ "app/uninstalled" ]
   uri = "/webhooks"
 
+[app_proxy]
+url = "https://bio-appendix-wichita-enough.trycloudflare.com/"
+subpath = "store-return"
+prefix = "apps"
+
 [pos]
 embedded = false

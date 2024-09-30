@@ -57,13 +57,14 @@ export async function loader({ request, params }) {
   const itemDetails = [];
   for (const item of items) {
     if (!item.sku) {
-      throw new Error(`Item with no SKU found: ${JSON.stringify(item)}`);
+      //console.log(`Item with no SKU found: ${JSON.stringify(item)}`);
+      itemDetails.push({ [item.sku]: null });
+      continue;
     }
 
-    const response = await admin.graphql(
-      `#graphql
-      query productInfo($sku: String) {
-        products(first: 1, query: $sku) {
+    const query = `#graphql
+      query productInfo{
+        products(first: 1, query: "sku:${item.sku}") {
           edges {
             node {
               id
@@ -92,12 +93,23 @@ export async function loader({ request, params }) {
             }
           }
         }
-      }`,
-      { sku: "sku: sku-hosted-1" }
-    );
+      }`;
 
-    const data = await response.json();
-    itemDetails.push({ [item.sku] : data.data});
+    try {
+      const response = await admin.graphql(query);
+      const data = await response.json();
+
+      if (!data || !data.data || data.data.products.edges.length === 0) {
+        //console.log(`Product not found for SKU: ${item.sku}`);
+        itemDetails.push({ [item.sku]: null });
+        continue;
+      }
+
+      itemDetails.push({ [item.sku]: data.data });
+    } catch (error) {
+      console.error(`Error fetching product for SKU: ${item.sku}`, error);
+      itemDetails.push({ [item.sku]: null });
+    }
   }
 
   return json({
@@ -105,6 +117,7 @@ export async function loader({ request, params }) {
     itemDetails,
   });
 }
+
 
 
 
@@ -146,7 +159,7 @@ export async function action({ request, params }) {
 export default function Refund() {
 
   const { devolution, itemDetails } = useLoaderData();
-  console.log(itemDetails);
+  //console.log(itemDetails);
   const action = useActionData();
   const fetcher = useFetcher();
 
@@ -202,40 +215,38 @@ export default function Refund() {
   const handlerSaveModal = useCallback(() => setSaveModal((saveModal) => !saveModal), []);
 
 
+  const handleArticlesList = devolution.items.map((item, index) => {
+    try {
+      // Encontrar el item por SKU
+      const foundItem = itemDetails.find(detail => detail[item.sku] !== undefined);
 
-  // Articles Map List
-  const handleArticles = devolution.items.map((item) => {
-    return (
-      <>
-        <Grid.Cell >
-          <Text as="p" variant="bodySm">
-            {item.sku}
-          </Text>
-        </Grid.Cell>
-        <Grid.Cell>
-          <Text as="p" variant="bodySm">
-            {item.quantity}
-          </Text>
-        </Grid.Cell>
-        <Divider borderColor="transparent" borderWidth={'025'} />
-        <Divider borderColor="transparent" borderWidth={'025'} />
-      </>
-    )
+      if (!foundItem) {
+        console.error(`Item con SKU ${item.sku} no encontrado en itemDetails.`);
+        return null; // Salir temprano si no se encuentra el item
+      }
+
+      // Extraer los datos asegurándose de que las propiedades existan
+      const productData = foundItem[item.sku]?.products?.edges?.[0]?.node;
+
+      if (!productData) {
+        console.error(`Datos del producto para SKU ${item.sku} no encontrados.`);
+        return null; // Salir temprano si no se encuentran los datos del producto
+      }
+
+      const price = productData.variants?.edges?.[0]?.node?.price ?? 'N/A';
+      const url = productData.media?.edges?.[0]?.node?.image?.url ?? '';
+      const alt = productData.media?.edges?.[0]?.node?.alt ?? 'Sin descripción';
+      const title = productData.title ?? 'Producto sin título';
+
+      //console.log(productData);
+
+      return Products(item.quantity, url, alt, price, title, index);
+    } catch (error) {
+      console.error(`Error procesando el item con SKU ${item.sku}:`, error);
+      return null; // En caso de error, retorna null para evitar fallos en el renderizado
+    }
   });
 
-  const handleArticlesList = devolution.items.map((item) => {
-    const foundItem = items.find(item => item[skuToFind] !== undefined);
-    console.log(foundItem);
-    const price = foundItem.products.edges[0].node.variants.edges[0].node.price
-    const url = foundItem.products.edges[0].node.title.media.edges[0].node.image.url
-    const alt = foundItem.products.edges[0].node.title.media.edges[0].node.alt
-    const title = foundItem.products.edges[0].node.title
-
-
-    return (
-      Products(item.qty)
-    )
-  });
 
   const formatDate = (dateString) => {
 
@@ -271,6 +282,8 @@ export default function Refund() {
     { label: 'Puebla', value: 'Puebla' },
     { label: 'Queretaro', value: 'Queretaro' },
     { label: 'Tijuana', value: 'Tijuana' },
+    { label: 'Coacalco', value: 'Coacalco' },
+    { label: 'Toreo', value: 'Toreo' }
   ];
   const handleSubsidiarySelected = useCallback(
     (value) => setSubsidiarySelected(value),
@@ -345,6 +358,7 @@ export default function Refund() {
 
   return (
     <Page
+
       backAction={{ content: 'Volver', url: '/app' }}
       title={`#${devolution.id}`}
       compactTitle

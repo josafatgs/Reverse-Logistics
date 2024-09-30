@@ -141,7 +141,7 @@ export default function ProductRefunds() {
 
   return (
 
-      <Page title="Devoluciones" >
+      <Page title="Devoluciones" fullWidth>
           <Card padding={'0'}>
             <IndexFilters
 

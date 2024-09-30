@@ -1,19 +1,50 @@
 import db from "../db.server";
 
-export async function getProductData(sku, graphql){
-  
+export async function createDevolution(devolutionData) {
+  try {
+
+    const res = await db.devolution.create({
+        data: {
+            sucursal: devolutionData.subsidiary,
+            mainReason: devolutionData.main_reason,
+            explanation: devolutionData.explanation,
+            ticketNumber: parseInt(devolutionData.ticket_number, 10),
+            clientNumber: parseInt(devolutionData.client_number, 10),
+            orderNumber: devolutionData.order_number != "" ? parseInt(devolutionData.order_number, 10) : 0,
+            dateProductArrive: new Date(devolutionData.date_product_arrived),
+            contacto: devolutionData.phone_number,
+        },
+    });
+
+    const itemsData = devolutionData.items.map((item) => ({
+        sku: item.sku,
+        quantity: item.cantidad,
+        devolutionId: res.id,
+    }));
+
+    await db.devolution_Item.createMany({
+        data: itemsData,
+    });
+
+    console.log(res);
+    return res;
+
+  } catch (error) {
+      console.error('Error creating devolution:', error);
+      return null;
+  }
+
 }
 
 export async function getDevolutions(graphql) {
-    const devolutions = await db.devolution.findMany({
-        orderBy: { createdAt: "desc" }
-    });
+  const devolutions = await db.devolution.findMany({
+      orderBy: { createdAt: "desc" }
+  });
 
-    if (devolutions.length === 0) return [];
+  if (devolutions.length === 0) return [];
 
-    return devolutions;
+  return devolutions;
 }
-
 
 export async function getDevolutionById(devolutionId, graphql) {
 

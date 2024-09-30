@@ -32,7 +32,7 @@ function Order({ orderNumber, ticketNumber, clientNumber, clientPhone }) {
                 Contacto
             </Text>
             <Text variant="bodySm" as="p">
-                {clientPhone}
+                <p style={{color: "#4469ff"}}>{clientPhone}</p>
             </Text>
         </Card>
     );

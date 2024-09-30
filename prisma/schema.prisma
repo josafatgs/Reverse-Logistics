@@ -40,7 +40,7 @@ model Devolution{
   explanation       String
   ticketNumber      Int
   clientNumber      Int
-  orderNumber       Int
+  orderNumber       Int      @default(0)
   items             Devolution_Item[]
   createdAt         DateTime @default(now())
   returnmentLabel   String   @default("")

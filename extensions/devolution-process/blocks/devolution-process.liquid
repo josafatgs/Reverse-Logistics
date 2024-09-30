@@ -1,55 +1,68 @@
 <div class="devolution-process-section">
 
-  <div class="title-section">
-      {% comment %} <h1>Devolución</h1> {% endcomment %}
-  </div>
-
   <div class="card show" id="card-1">
       <h1>Empieza tu garantía aquí!</h1>
-      <span>Escribe el numero de ticket para comenzar tú devolución</span>
+      <span>Escribe el número de ticket para comenzar</span>
+      <div class="tooltip ticket__number">
+        <span>?</span>
+        <span class="tooltiptext">
+          <img src={{ 'NumeroDeTicket.png' | asset_url }} height="600px" alt="client ticker example">
+        </span>
+      </div>
       <div class="returnment-container">
           <div class="returnment-bar">
-              <input type="text" id="ticket-input" placeholder="Numero de Ticket">
+              <input type="text" id="ticket-input" placeholder="Número de Ticket">
               <button id="next-card" class="first-button-next" data-card="1">Devolver</button>
           </div>
       </div>
   </div>
 
   <div class="card" id="card-2">
-      <h1> Numero de Orden</h1>
-
+      <h1> Número de Orden</h1>
+      <div class="tooltip order__number">
+        <span>?</span>
+        <span class="tooltiptext">
+          <img src={{ 'NumeroDePedido.png' | asset_url }} height="600px" alt="client ticker example">
+        </span>
+      </div>
       <div class="card-question">
           <div class="input-bar">
-              <input type="text" id="order-input" placeholder="Numero de Orden">
+              <input type="text" id="order-input" placeholder="Número de Orden">
           </div>
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="2">Atrás</button>
           <button id="next-card" data-card="2">Siguiente</button>
       </div>
   </div>
 
   <div class="card" id="card-3">
-      <h1> Numero de Cliente</h1>
-
+      <h1> Número de Cliente</h1>
+      <div class="tooltip client__number">
+        <span>?</span>
+        <span class="tooltiptext">
+          <img src={{ 'NumeroDeCliente.png' | asset_url }} height="600px" alt="client ticker example">
+        </span>
+      </div>
       <div class="card-question">
           <div class="input-bar">
-              <input type="text" id="client-number" placeholder="Numero de Cliente">
+              <input type="text" id="client-number" placeholder="Número de Cliente">
           </div>
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="3">Atrás</button>
           <button id="next-card" data-card="3">Siguiente</button>
       </div>
   </div>
 
   <div class="card" id="card-4">
       <h1> Motivo de devolución</h1>
-
       <div class="card-question">
           <div class="input-bar">
               <select id="reason-input" name="select">
-                  <option value="Paquete dañado" selected>Paquete dañado/option>
+                  <option value="Paquete dañado" selected>Paquete dañado</option>
                   <option value="Producto incorrecto">Producto incorrecto</option>
                   <option value="Pedido incompleto" >Pedido incompleto</option>
                   <option value="Iniciar garantía">Iniciar proceso de garantía</option>
@@ -58,13 +71,13 @@
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="4">Atrás</button>
           <button id="next-card" data-card="4">Siguiente</button>
       </div>
   </div>
 
   <div class="card" id="card-5">
       <h1>¿Donde realizaste la compra?</h1>
-
       <div class="card-question">
           <div class="input-bar">
               <select id="subsidiary-input" name="select">
@@ -72,11 +85,14 @@
                   <option value="Tijuana">Tijuana</option>
                   <option value="Puebla">Puebla</option>
                   <option value="Queretaro">Queretaro</option>
+                  <option value="Queretaro">Toreo</option>
+                  <option value="Queretaro">Coacalco</option>
               </select>
           </div>
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="5">Atrás</button>
           <button id="next-card" data-card="5">Siguiente</button>
       </div>
   </div>
@@ -91,6 +107,7 @@
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="6">Atrás</button>
           <button id="next-card" data-card="6">Siguiente</button>
       </div>
   </div>
@@ -105,6 +122,7 @@
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="7">Atrás</button>
           <button id="next-card" data-card="7">Siguiente</button>
       </div>
   </div>
@@ -145,24 +163,49 @@
       </div>
 
       <div class="card-button">
+          <button id="previus-card" data-card="8">Atrás</button>
           <button id="next-card" data-card="8">Siguiente</button>
       </div>
   </div>
 
   <div class="card" id="card-9">
+      <div id="loading-spinner" class="loading-spinner" style="display: none;"></div>
+      <h1> Número de teléfono</h1>
+
+      <div class="card-question">
+          <div class="input-bar">
+              <input type="text" id="phone-number" placeholder="Teléfono">
+          </div>
+      </div>
+
+      <div class="card-button">
+          <button id="previus-card" data-card="9">Atrás</button>
+          <button id="next-card" data-card="9">Siguiente</button>
+      </div>
+  </div>
+
+
+  <div class="card" id="card-10">
       <h1> Solicitud Exitosa</h1>
 
       <div class="card-question">
+
           <div class="sucess-info">
-              <p>La solicitud de devolución ha sido exitosa</p>
-              <p>Te pedimos ahora le des click al boton de continuar, para que un agente pueda atender tu solicitud por whatsapp, lo antes posible.</p>
+              <p>Tu solicitud de garantía ha sido enviada con éxito.</p>
+              <p>Por favor, haz clic en el botón "Continuar" para que puedas completar tu solicitud a través de WhatsApp, enviandonos tus evidencias.</p>
               <P>Folio: <strong id="folio-number"> </strong> </P>
               <br>
               <br>
-              <a class="whatsapp-continue" id="whatsapp-anchor" type="button" href="#">Continuar en Whatsapp</a>
+              <a class="whatsapp-continue" id="whatsapp-anchor" type="button" target="_blank" href="#">Continuar en Whatsapp</a>
+          </div>
+          <div class="error-info">
+            <p>Upps.. </p>
+            <p>hubo un error, corrija los datos o vuelve a intentarlo mas tarde.</p>
           </div>
       </div>
   </div>
+
+
 
 </div>
 

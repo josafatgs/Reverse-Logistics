@@ -1,31 +1,33 @@
 document.addEventListener("DOMContentLoaded", (event) => {
 
-  const data = {
-    "client_number": 25242,
-    "createdAt": "Sun, 22 Sep 2024 01:48:43 GMT",
-    "date_product_arrvie": "Fri, 22 May 2020 09:06:28 GMT",
-    "explanation": "El producto llego dañado por la paqueteria, ya que venia aplastada",
-    "id": 2,
-    "items": [
-        {
-            "cantidad": 1,
-            "sku": "9309"
-        },
-        {
-            "cantidad": 2,
-            "sku": "23424"
-        }
-    ],
-    "main_reason": "Paquete dañado",
-    "order_number": 243432,
-    "requires_label": 0,
-    "returnment_label": "",
-    "shipping_payment": 0,
-    "status": "En camino",
-    "subsidiary": "CEDIS",
-    "ticket_number": 2342909
-  }
+  const acceptedSvg = '<svg viewBox="0 -1.5 11 11" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>done_mini [#1484]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-304.000000, -366.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <polygon id="done_mini-[#1484]" points="259 207.6 252.2317 214 252.2306 213.999 252.2306 214 248 210 249.6918 208.4 252.2306 210.8 257.3082 206"> </polygon> </g> </g> </g> </g></svg>';
 
+  const rejectedSvg = '<svg viewBox="0 -0.5 8 8" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>close_mini [#1522]</title> <desc>Created with Sketch.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"> <g id="Dribbble-Light-Preview" transform="translate(-385.000000, -206.000000)" fill="#000000"> <g id="icons" transform="translate(56.000000, 160.000000)"> <polygon id="close_mini-[#1522]" points="334.6 49.5 337 51.6 335.4 53 333 50.9 330.6 53 329 51.6 331.4 49.5 329 47.4 330.6 46 333 48.1 335.4 46 337 47.4"> </polygon> </g> </g> </g> </g></svg>';
+
+  let data = {};
+
+  function clear(){
+    const progressBar = document.getElementById("progress-bar");
+    const pending__svg = document.querySelector(".pending__svg");
+    const carrier__svg = document.querySelector(".carrier__svg");
+    const review__svg = document.querySelector(".review__svg");
+    const result__svg = document.querySelector(".result__svg");
+
+    progressBar.style.width = "0%";
+    if (pending__svg.classList.contains("done")) {
+      pending__svg.classList.remove("done");
+    }
+    if (carrier__svg.classList.contains("done")) {
+      carrier__svg.classList.remove("done");
+    }
+    if (review__svg.classList.contains("done")) {
+      review__svg.classList.remove("done");
+    }
+    if (result__svg.classList.contains("done")) {
+      result__svg.classList.remove("done");
+      result__svg.innerHTML = "";
+    }
+  }
 
   function setProgressBar(){
 
@@ -62,6 +64,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       carrier__svg.classList.add("done");
       review__svg.classList.add("done");
       result__svg.classList.add("done");
+      result__svg.innerHTML = rejectedSvg;
 
     } else if(data.status == "Aceptado") {
       //return "bg-primary";
@@ -70,32 +73,54 @@ document.addEventListener("DOMContentLoaded", (event) => {
       carrier__svg.classList.add("done");
       review__svg.classList.add("done");
       result__svg.classList.add("done");
+      result__svg.innerHTML = acceptedSvg;
     }
 
     console.log( "Hola");
   }
 
-  function getDevolutionInfo() {
+  async function getData(folio) {
 
-    //
+    clear();
+
+    try {
+
+      const url = window.location.origin + "/apps/store-return/?id=" + folio;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`); // Manejo de errores HTTP
+      }
+
+      const data = await response.json();
+      console.log('Success:', data.devolution);
+      return data.devolution; // Devuelve el objeto de devolución
+
+    } catch (error) {
+      console.error('Error:', error);
+      return null; // Retorna null en caso de error
+    }
+  }
+
+
+  async function getDevolutionInfo() {
+
     const devoluciónValue = document.getElementById("search-input").value;
 
-    // Make Fetch request to get the data
-    console.log(typeof devoluciónValue);
-    console.log(data);
+    const result = await getData(devoluciónValue);
 
-    // If data is not empty
-    if (devoluciónValue == 1) {
-      // Show the info
+
+    if (devoluciónValue != "" && result != null) {
+
+      data = result;
 
       showInfoData();
       setProgressBar();
-
       handleResultsBox("result");
-    } else {
-      // Show error
-      handleResultsBox("no-result");
 
+    } else {
+      handleResultsBox("no-result");
     }
   }
 
