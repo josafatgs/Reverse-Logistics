@@ -40,12 +40,14 @@ import {
   updateCreditNote,
   updateWallet,
   updateValue,
-  updateSubsidiaryToGo
+  updateSubsidiaryToGo,
+  addEvent
 } from '../server/Devolution.server';
 
 import DevolutionSection from "../components/DevolutionSection";
 import Order from "../components/Order";
 import Products from "../components/Products";
+import Cronology from "../components/Cronology";
 
 
 export async function loader({ request, params }) {
@@ -122,6 +124,7 @@ export async function loader({ request, params }) {
 
 
 export async function action({ request, params }) {
+
   const formData = await request.formData();
   const actionType = formData.get("actionType");
 
@@ -150,17 +153,25 @@ export async function action({ request, params }) {
 
       break;
 
+    case "addEvent":
+      const ticketId = formData.get("ticketId");
+      const description = formData.get("description");
+      const date = formData.get("date");
+
+     await addEvent(ticketId, description, date);
+
+      break;
+
   }
 
-  return json({ success: true });
+  return json({ sucess: true});
 
 }
 
 export default function Refund() {
 
   const { devolution, itemDetails } = useLoaderData();
-  //console.log(itemDetails);
-  const action = useActionData();
+
   const fetcher = useFetcher();
 
   const handleSave = () => {
@@ -180,6 +191,9 @@ export default function Refund() {
       { method: "post" }
     );
   };
+
+
+
 
 
   // ======================= DEVOLUTION SECTION ===========================
@@ -354,6 +368,84 @@ export default function Refund() {
 
   // =============== END RESOLUTION SECTION ============================
 
+  // =============== START CRONOLOGY SECTION ===========================
+
+  const [ newEventNote,setNewEventNote ] = useState("");
+  const handleNewNoteEventChange = useCallback(
+    (event) => {
+      setNewEventNote(event.target.value);
+    },
+    []
+  );
+
+  function formatRowMarkup(array) {
+    return array.map(( {createdAt, description} ) =>{
+      return(
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '2rem',
+          marginBottom: '2rem',
+        }}
+        >
+          <div style={{
+              display: 'grid',
+              placeContent: 'center',
+              width: '1.25rem', // w-5
+              height: '1.25rem', // h-5
+              borderRadius: '0.375rem', // rounded-md
+              backgroundColor: '#e5e7eb', // bg-gray-200
+            }}
+            >
+            <div style={{
+              width: '0.5rem', // w-2
+              height: '0.5rem', // h-2
+              borderRadius: '0.125rem', // rounded-sm
+              backgroundColor: '#374151', // bg-gray-700
+            }}
+            ></div>
+            
+          </div>
+          <div>
+            <Text variant='bodyMd' fontWeight='medium'>{description}</Text>
+            <Text variant='bodySm'>{formatDate(createdAt)}</Text>
+          </div>
+        </div>
+      );
+    });
+  }
+
+
+  const [ events, setEvents ] = useState(devolution.event);
+
+  const handleAddEvent = useCallback( async () => {
+    if (newEventNote) {
+
+      const response = await fetcher.submit(
+        {
+          actionType: "addEvent",
+          description: newEventNote,
+          date: new Date().toISOString(),
+          ticketId: devolution.id,
+        },
+        { method: "POST" }
+      );
+
+
+      const newEvent = {
+        createdAt: new Date().toISOString(),
+        description: newEventNote,
+      };
+
+      setEvents((prevEvents) => [newEvent, ...prevEvents]);
+      setNewEventNote("");
+
+    }
+  }, [newEventNote]);
+
+  let rowMarkupEvents = formatRowMarkup(events);
+
+  // =============== END CRONOLOGY SECTION =============================
 
 
   return (
@@ -577,6 +669,13 @@ export default function Refund() {
           <Divider borderColor="transparent" borderWidth={'100'} />
           <Divider borderColor="transparent" borderWidth={'100'} />
           <Divider borderColor="transparent" borderWidth={'100'} />
+
+          <Cronology
+            handleAddEvent={handleAddEvent}
+            newEventNote={newEventNote}
+            handleNewNoteEventChange={handleNewNoteEventChange}
+            rowMarkupEvents={rowMarkupEvents}
+          />
 
         </Layout.Section>
 

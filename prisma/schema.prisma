@@ -35,12 +35,12 @@ model Session {
 model Devolution{
   id                Int      @id @default(autoincrement())
   status            String   @default("Pendiente")
-  mainReason        String
-  sucursal          String
-  explanation       String
-  ticketNumber      Int
-  clientNumber      Int
-  orderNumber       Int      @default(0)
+  mainReason        String   @default("")
+  sucursal          String   @default("")
+  explanation       String   @default("")
+  ticketNumber      String   @default("")
+  clientNumber      String   @default("")
+  orderNumber       String   @default("")
   items             Devolution_Item[]
   createdAt         DateTime @default(now())
   returnmentLabel   String   @default("")
@@ -53,12 +53,22 @@ model Devolution{
   value             Float   @default(0)
   contacto          String  @default("")
   subsidiaryToGo    String  @default("")
+  event             Event[]
 }
 
 model Devolution_Item{
-  id           Int      @id @default(autoincrement())
-  devolution Devolution @relation(fields: [devolutionId], references: [id])
-  devolutionId Int
-  sku          String
-  quantity     Int
+  id            Int      @id @default(autoincrement())
+  devolution    Devolution @relation(fields: [devolutionId], references: [id])
+  devolutionId  Int
+  sku           String
+  quantity      Int
+}
+
+
+model Event{
+  id            Int @id @default(autoincrement())
+  devolution    Devolution @relation(fields: [devolutionId], references: [id])
+  devolutionId  Int
+  description   String
+  createdAt     DateTime @default(now())
 }

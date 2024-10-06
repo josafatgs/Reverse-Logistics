@@ -1,0 +1,370 @@
+<div class="two-in-one">
+
+  <div class="user-choose">
+
+    <h1>{{ block.settings.title_message_choose }}</h1>
+
+    <div>
+      <button id="check_button_opt"> {{ block.settings.option_check }} </button>
+
+      <button id="create_button_opt"> {{ block.settings.option_create }} </button>
+    </div>
+
+  </div>
+
+  <div class="devolution-process-section not-show">
+
+    <div class="card show-card" id="card-1">
+        <h1>{{ block.settings.cta }}</h1>
+        <span>Escribe el número de ticket para comenzar</span>
+        <div class="tooltip ticket__number">
+          <span>{{ block.settings.tooltiptext }}</span>
+          <span class="tooltiptext">
+            <img src={{ 'img_ticket_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
+          </span>
+        </div>
+        <div class="returnment-container">
+            <div class="returnment-bar">
+                <input type="text" id="ticket-input" placeholder="Número de Ticket" required>
+                <button id="next-card" class="first-button-next" data-card="1">Devolver</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="card-2">
+        <h1> Número de Orden</h1>
+        <div class="tooltip order__number">
+          <span>{{ block.settings.tooltiptext }}</span>
+          <span class="tooltiptext">
+            <img src={{ 'img_order_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
+          </span>
+        </div>
+        <div class="card-question">
+            <div class="input-bar">
+                <input type="text" id="order-input" placeholder="Número de Orden">
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="2">Atrás</button>
+            <button id="next-card" data-card="2">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-3">
+        <h1> Número de Cliente</h1>
+        <div class="tooltip client__number">
+          <span>{{ block.settings.tooltiptext }}</span>
+          <span class="tooltiptext">
+            <img src={{ 'img_client_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
+          </span>
+        </div>
+        <div class="card-question">
+            <div class="input-bar">
+                <input type="text" id="client-number" placeholder="Número de Cliente" required>
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="3">Atrás</button>
+            <button id="next-card" data-card="3">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-4">
+        <h1> Motivo de devolución</h1>
+        <div class="card-question">
+            <div class="input-bar">
+                <select id="reason-input" name="select">
+                    <option value="Paquete dañado" selected>Paquete dañado</option>
+                    <option value="Producto incorrecto">Producto incorrecto</option>
+                    <option value="Pedido incompleto" >Pedido incompleto</option>
+                    <option value="Iniciar garantía">garantía</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="4">Atrás</button>
+            <button id="next-card" data-card="4">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-5">
+        <h1>¿Donde realizaste la compra?</h1>
+        <div class="card-question">
+            <div class="input-bar">
+                <select id="subsidiary-input" name="select">
+                    <option value="En linea" selected>En Linea</option>
+                    <option value="Tijuana">Tijuana</option>
+                    <option value="Puebla">Puebla</option>
+                    <option value="Queretaro">Queretaro</option>
+                    <option value="Queretaro">Toreo</option>
+                    <option value="Queretaro">Coacalco</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="5">Atrás</button>
+            <button id="next-card" data-card="5">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-6">
+        <h1> Comentarios</h1>
+
+        <div class="card-question">
+            <div class="input-bar">
+                <textarea name="textarea" id="commentaries" cols="60" rows="10"></textarea>
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="6">Atrás</button>
+            <button id="next-card" data-card="6">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-7">
+        <h1> Fecha en que recibío el producto</h1>
+
+        <div class="card-question">
+            <div class="input-bar">
+                <input id="date-input" type="date">
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="7">Atrás</button>
+            <button id="next-card" data-card="7">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-8">
+        <h1> Productos a devolver</h1>
+
+        <div class="card-question">
+            <div class="input-bar">
+
+                <div class="field-text-input">
+
+
+                    <span>SKU: </span>
+                    <input id="sku-input" type="text" class="same-as-number">
+
+                    <span>Cantidad:</span>
+                    <input id="qty-input" type="number" value="0">
+
+
+                    <input type="button" class="add-input-field" id="add-product-button" value="+"/>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="product-list">
+          <table id="product-table" border="1">
+              <thead>
+                  <tr>
+                      <th>SKU</th>
+                      <th>Cantidad</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- Aquí se agregarán los productos dinámicamente -->
+              </tbody>
+          </table>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="8">Atrás</button>
+            <button id="next-card" data-card="8">Siguiente</button>
+        </div>
+    </div>
+
+    <div class="card" id="card-9">
+        <h1> Número de teléfono</h1>
+
+        <div class="card-question">
+            <div class="input-bar">
+                <input type="text" id="phone-number" placeholder="Teléfono">
+            </div>
+        </div>
+
+        <div class="card-button">
+            <button id="previus-card" data-card="9">Atrás</button>
+            <button id="next-card" data-card="9">Siguiente</button>
+        </div>
+    </div>
+
+    <div id="loading-spinner" class="loading-spinner" style="display: none;"></div>
+
+    <div class="card" id="card-10">
+        <h1> Solicitud Exitosa</h1>
+
+        <div class="card-question">
+
+            <div class="sucess-info">
+                <p>{{ block.settings.ticket_sucess }}</p>
+                <p>{{ block.settings.ticket_next_steps }}</p>
+                <P>Folio: <strong id="folio-number"> </strong> </P>
+                <br>
+                <br>
+                <a class="whatsapp-continue" id="whatsapp-anchor" type="button" target="_blank" href="#">{{ block.settings.button_cta }}</a>
+            </div>
+            <div class="error-info">
+              <p>Upps.. </p>
+              <p>hubo un error, corrija los datos o vuelve a intentarlo mas tarde.</p>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+  <div class="main-section-container not-show">
+
+    <div class="title-section">
+        <h1>{{ block.settings.status_title }}</h1>
+    </div>
+
+    <div class="search-returnment">
+        <div class="search-container-returment">
+            <input type="text" id="search-input" placeholder="Buscar estatus de devolución">
+            <button id="search-button">Buscar</button>
+        </div>
+    </div>
+
+    <div class="result-container">
+
+
+        <div class="progress-container">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+
+        <div class="container-info-returnment">
+
+            <div class="container-info-column-returnment">
+                <div class="circle pending__svg">
+                    {% render 'svg' name:'pending' %}
+                </div>
+            </div>
+
+            <div class="container-info-column-returnment">
+                <div class="circle carrier__svg">
+                    {% render 'svg' name:'carrier' %}
+                </div>
+            </div>
+
+            <div class="container-info-column-returnment">
+                <div class="circle review__svg">
+                    {% render 'svg' name:'review' %}
+                </div>
+            </div>
+
+            <div class="container-info-column-returnment">
+                <div class="circle result__svg">
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="container-details-returnment">
+            <div class="details-section">
+                <div class="title-stage-returnment">
+                    <h2>Estatus</h2>
+                </div>
+                <div class="info-stage">
+                    <p class="status-label" id="status-info-label">Review the server status</p>
+                </div>
+            </div>
+            <div class="details-section">
+                <div class="title-stage-returnment">
+                    <h2>Detalles</h2>
+                </div>
+                <div class="info-stage">
+                    <p class="status-info-populated" id="status-info-populated"></p>
+                    <p class="status-info-commentaries" id="status-info-commentaries"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="no-result-found">
+      <div class="details-section"></div>
+        <div class="info-stage all-rounded">
+          <p class="status-label">No hay informacion de esa devolución</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+{% schema %}
+  {
+    "name": "Ticket Two in One",
+    "target": "section",
+    "stylesheet": "code_two_in_one.min.css",
+    "javascript": "code_two_in_one.min.js",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title_message_choose",
+        "label": "Title",
+        "default": "¿Que quieres hacer?"
+      },
+      {
+        "type": "text",
+        "id": "option_check",
+        "label": "Button text to check",
+        "default": "Revisar"
+      },
+      {
+        "type": "text",
+        "id": "option_create",
+        "label": "Button text to create",
+        "default": "Crear un ticket"
+      },
+      {
+        "type": "text",
+        "id": "status_title",
+        "label": "Check status title",
+        "default": "Estatus de la devolucion"
+      },
+      {
+        "type": "text",
+        "id": "cta",
+        "label": "CTA",
+        "default": "Empieza tu garantía aquí!"
+      },
+      {
+        "type": "text",
+        "id": "tooltiptext",
+        "label": "Help Tooltip",
+        "default": "?"
+      },
+      {
+        "type": "text",
+        "id": "ticket_success",
+        "label": "Sucessful ticket message",
+        "default": "Tu solicitud de garantía ha sido enviada con éxito."
+      },
+      {
+        "type": "textarea",
+        "id": "ticket_next_steps",
+        "label": "Next steps",
+        "default": "Por favor, haz clic en el botón 'Continuar' para que puedas completar tu solicitud a través de WhatsApp, enviandonos tus evidencias."
+      },
+      {
+        "type": "text",
+        "id": "button_cta",
+        "label": "Whatsapp Button",
+        "default": "Continuar a Whatsapp"
+      }
+    ]
+  }
+{% endschema %}

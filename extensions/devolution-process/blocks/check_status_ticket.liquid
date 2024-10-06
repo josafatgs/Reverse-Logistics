@@ -1,7 +1,7 @@
 <div class="main-section-container">
 
   <div class="title-section">
-      <h1>{{ 'status_check.title' | t }}</h1>
+      <h1>{{ block.settings.status_title }}</h1>
   </div>
 
   <div class="search-returnment">
@@ -40,7 +40,7 @@
 
           <div class="container-info-column-returnment">
               <div class="circle result__svg">
-                  {% comment %} {% render 'svg' name:'accepted' %} {% endcomment %}
+
               </div>
           </div>
 
@@ -71,7 +71,7 @@
   <div class="no-result-found">
     <div class="details-section"></div>
       <div class="info-stage all-rounded">
-        <p class="status-label">No hay informacion de esa devolucion</p>
+        <p class="status-label">No hay informacion de esa devolución</p>
       </div>
     </div>
   </div>
@@ -80,13 +80,17 @@
 
 {% schema %}
   {
-    "name": "Devolution Status Check",
+    "name": "Ticket Status Check",
     "target": "section",
-    "stylesheet": "devolution.css",
-    "javascript": "devolution.js",
+    "stylesheet": "code_ticket_check.min.css",
+    "javascript": "code_ticket_check.min.js",
     "settings": [
-      { "type": "product", "id": "product", "label": "product", "autofill": true },
-      { "type": "color", "id": "colour", "label": "Star Colour", "default": "#ff0000" }
+      {
+        "type": "text",
+        "id": "status_title",
+        "label": "Check status title",
+        "default": "Estatus de la devolucion"
+      }
     ]
   }
 {% endschema %}

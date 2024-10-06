@@ -43,26 +43,21 @@ export const action = async ({ request }) => {
 
 
   if (request.method == "POST"){
-    console.log("POST request");
 
     try {
       const data = await request.json();
-      console.log("Datos recibidos:", data); // Añadir este log para ver qué datos se están recibiendo
       const newDevolution = await createDevolution(data);
 
       if (!newDevolution) {
-        console.log(newDevolution);
-        return new Response("Error al crear la devolución", { status: 500 });
+        return new Response(`Error al crear la devolución: ${error}`, { status: 500 });
       }
 
       return json({ devolution: newDevolution });
 
     } catch (error) {
-      console.error("Error al procesar la solicitud:", error);
-      return new Response("Error interno del servidor", { status: 500 });
+      return new Response(`Error interno del servidor: ${error}`, { status: 500 });
     }
 
   }
 
-  return json({ message: "Hello from action proxy!" });
 };

@@ -8,9 +8,9 @@ export async function createDevolution(devolutionData) {
             sucursal: devolutionData.subsidiary,
             mainReason: devolutionData.main_reason,
             explanation: devolutionData.explanation,
-            ticketNumber: parseInt(devolutionData.ticket_number, 10),
-            clientNumber: parseInt(devolutionData.client_number, 10),
-            orderNumber: devolutionData.order_number != "" ? parseInt(devolutionData.order_number, 10) : 0,
+            ticketNumber: devolutionData.ticket_number,
+            clientNumber: devolutionData.client_number,
+            orderNumber: devolutionData.order_number != "" ? devolutionData.order_number : 0,
             dateProductArrive: new Date(devolutionData.date_product_arrived),
             contacto: devolutionData.phone_number,
         },
@@ -52,16 +52,22 @@ export async function getDevolutionById(devolutionId, graphql) {
       const devolution = await db.devolution.findUnique({
         where: { id: Number(devolutionId) },
         include: {
-          items: true
+          items: true,
+          event: {
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
         },
       });
+
+      console.log(devolution);
 
       return devolution;
 
     } catch (error) {
 
-      console.error('Error fetching devolution:', error);
-      return null;
+      return error;
     }
 }
 
@@ -260,4 +266,35 @@ export async function updateSubsidiaryToGo(devolutionId, subsidiaryToGo){
         return null;
 
     }
+}
+
+
+export async function addEvent(ticketId, description, date) {
+  try {
+
+    // Verificar si la devolución existe
+    const devolution = await db.devolution.findUnique({
+      where: { id: Number(ticketId) },
+    });
+
+    if (!devolution) {
+      throw new Error(`Devolution with id ${devolutionId} does not exist`);
+    }
+
+    // Crear el evento relacionado con la devolución
+    const newEvent = await db.event.create({
+      data: {
+        devolutionId: Number(ticketId),
+        description: description,
+        createdAt: date
+      },
+    });
+
+    console.log('Event created successfully:', newEvent);
+    return newEvent;
+
+  } catch (error) {
+    console.log('Event Error', error);
+    return error;
+  }
 }

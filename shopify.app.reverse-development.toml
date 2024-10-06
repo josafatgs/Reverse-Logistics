@@ -1,0 +1,34 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "344df29cdb345d1f8f3d3a7745f99c9a"
+name = "Reverse-development"
+handle = "reverse-development"
+application_url = "https://apartments-dept-ips-outputs.trycloudflare.com"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = "developmentstorequick.myshopify.com"
+include_config_on_deploy = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_products"
+
+[auth]
+redirect_urls = [
+  "https://apartments-dept-ips-outputs.trycloudflare.com/auth/callback",
+  "https://apartments-dept-ips-outputs.trycloudflare.com/auth/shopify/callback",
+  "https://apartments-dept-ips-outputs.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+[app_proxy]
+url = "https://apartments-dept-ips-outputs.trycloudflare.com/app/proxy"
+subpath = "store-return"
+prefix = "apps"
+
+[pos]
+embedded = false

@@ -1,8 +1,8 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "41e9bcd3adacdeb12b8dc29d2e71136f"
-name = "Devoluciones"
-handle = "reverse-logistics"
+name = "Reverse"
+handle = "reverse"
 application_url = "https://launches-todd-circulation-verde.trycloudflare.com"
 embedded = true
 

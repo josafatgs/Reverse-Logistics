@@ -172,12 +172,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
       // Show Result
       statusLabelInfo.innerHTML = "Rechazado";
       statusInfoPopulated.innerHTML = "Tu devolución ha sido rechazada";
-      //statusInfoCommentaries.innerHTML = data.comentaries;
+      statusInfoCommentaries.innerHTML = data.comentarios;
     } else if(data.status == "Aceptado") {
       // Show Result
       statusLabelInfo.innerHTML = "Aceptado";
       statusInfoPopulated.innerHTML = "Tu devolución ha sido aceptada";
-      //statusInfoCommentaries.innerHTML = data.comentaries;
+
+      if (data.ndc != "" & data.monedero == ""){
+        statusInfoCommentaries.innerHTML = "Tienes una nota de credito " + `<strong class="important-text">#${data.ndc}</strong>` + " con valor de " + `<strong class="important-text">$ ${data.value}</strong>`
+      } else if (data.monedero != "" & data.ndc == "") {
+        statusInfoCommentaries.innerHTML = "Tienes un monedero " + `<strong class="important-text">#${data.ndc}</strong>` + " con valor de " + `<strong class="important-text">$ ${data.value}</strong>`
+      }
     }
 
   }

@@ -36,8 +36,8 @@ export default function ProductRefunds() {
   const navigate = useNavigate();
 
   const resourceName = {
-      singular: 'Devolución',
-      plural: 'Devoluciones',
+      singular: 'Ticket',
+      plural: 'Tickets',
   };
 
 
@@ -141,7 +141,7 @@ export default function ProductRefunds() {
 
   return (
 
-      <Page title="Devoluciones" fullWidth>
+      <Page title="Tickets" fullWidth>
           <Card padding={'0'}>
             <IndexFilters
 

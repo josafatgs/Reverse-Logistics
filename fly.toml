@@ -1,0 +1,28 @@
+# fly.toml app configuration file generated for reverse-logistics-aged-grass-1765 on 2024-09-30T14:24:43-06:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'reverse-logistics-aged-grass-1765'
+primary_region = 'qro'
+
+[build]
+
+[env]
+  PORT = '3000'
+  SCOPES = 'read_products'
+  SHOPIFY_API_KEY = '1dd4dfd50b39902e7542119ddcccd275'
+  SHOPIFY_APP_URL = 'https://reverse-logistics-aged-grass-1765.fly.dev'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

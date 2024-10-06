@@ -34,6 +34,7 @@ function Order({ orderNumber, ticketNumber, clientNumber, clientPhone }) {
             <Text variant="bodySm" as="p">
                 <p style={{color: "#4469ff"}}>{clientPhone}</p>
             </Text>
+            
         </Card>
     );
 }

@@ -207,7 +207,8 @@
 #product-table{
   width: 50%;
   margin-top: 20px;
-  border-color: gray;
+  border-color: #bfbfbf;
+  table-layout: fixed;
 }
 
 @media (min-width: 768px){
@@ -232,6 +233,9 @@
     width: 100%;
   }
 
+}
+
+@media (max-width: 767px) {
   #product-table{
     width: 100%;
     margin-top: 20px;
@@ -251,14 +255,13 @@
 
 .tooltip{
   position: relative;
-  border-radius: 50%;
-  height: 30px;
-  width: 30px;
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #1950e0;
   color: white;
+  padding: 0 10px;
 }
 
 .tooltiptext{
@@ -270,6 +273,10 @@
   opacity: 0;
   z-index: 1000;
   top: 50px;
+}
+
+.tooltiptext img{
+  max-width: none;
 }
 
 .show-tooltip{
@@ -325,4 +332,15 @@
 .loading-container{
   width: 100%;
   height: 300px;
+}
+
+
+#product-table {
+  margin: 0 auto; /* Centra la tabla horizontalmente */
+  text-align: center; /* Centra el texto dentro de la tabla */
+}
+
+#product-table th, #product-table td {
+  text-align: center; /* Centra el texto dentro de las celdas */
+  vertical-align: middle; /* Centra el texto verticalmente */
 }
