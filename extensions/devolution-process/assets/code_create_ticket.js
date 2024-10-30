@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     // Cambiar mensaje whatsapp
     const anchor = document.getElementById('whatsapp-anchor');
-    const url = `https://api.whatsapp.com/send?phone=522211939333&text=Hola, genere un nuevo ticket, por *${info.mainReason}*. Mi número de folio es *${info.id}*.`; // Cambiar el número de teléfono & el número de folio
+    const url = `https://api.whatsapp.com/send?phone=522211939333&text=Hola, genere un nuevo ticket, por *${info.mainReason}* y mi compra la realice en *PT${info.sucursal}*. Mi número de folio es *${info.id}*.`; // Cambiar el número de teléfono & el número de folio
     anchor.href = url;
 
     showNextCard(9, 10);

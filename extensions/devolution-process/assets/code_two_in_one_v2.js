@@ -216,7 +216,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
     "order_number": "",
     "items": [],
     "date_product_arrived": "",
-    "phone_number": ""
+    "phone_number": "",
+    "files": []
   };
 
   function validateField(value, fieldName) {
@@ -238,14 +239,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
     data_to_save.items = [];
     data_to_save.date_product_arrived = "";
     data_to_save.phone_number = "";
+    data_to_save.files = [];
 
-    document.getElementById('ticket-input').value = "";
     document.getElementById('order-input').value = "";
     document.getElementById('client-number').value = "";
     document.getElementById('reason-input').value = "";
-    document.getElementById('subsidiary-input').value = "";
-    document.getElementById('commentaries').value = "";
-    document.getElementById('date-input').value = "";
     document.getElementById('sku-input').value = "";
     document.getElementById('qty-input').value = "";
     document.getElementById('phone-number').value = "";
@@ -255,22 +253,20 @@ document.addEventListener("DOMContentLoaded", (event) => {
   }
 
   function showNextCard(currentCard, nextCard) {
-    // Hide the current card
-    document.getElementById(`card-${currentCard}`).classList.remove("show-card");
 
     if (nextCard == 2) {
-        const subsidiary = document.getElementById('subsidiary-input').value;
-        const dateLabel = document.getElementById('date-arrived-label');
+      const subsidiary = document.getElementById('subsidiary-input').value;
+      const forSubsidiary = document.querySelector('.forSubsidiary');
 
-        if (subsidiary != "En Linea") {
-
-          document.querySelector('.forSubsidiary').style.display = 'none';
-          dateLabel.innerHTML = "Fecha en que recibiste el producto";
-        } else {
-          document.querySelector('.forSubsidiary').style.display = 'block';
-          dateLabel.innerHTML = "Fecha en que adquiriste el producto";
-        }
+      if (subsidiary != "En Linea") {
+        forSubsidiary.style.display = "none";
+      } else {
+        forSubsidiary.style.display = "block";
+      }
     }
+
+    // Hide the current card
+    document.getElementById(`card-${currentCard}`).classList.remove("show-card");
 
     // Show the next card
     if (document.getElementById(`card-${nextCard}`)) {
@@ -282,17 +278,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
   function showPreviosCard(currentCard) {
     const previosCard = parseInt(currentCard) - 1;
 
-    if (previosCard == 2) {
+    if (currentCard == 3) {
       const subsidiary = document.getElementById('subsidiary-input').value;
-      const dateLabel = document.getElementById('date-arrived-label');
+
       if (subsidiary != "En Linea") {
-        document.querySelector('.forSubsidiary').style.display = 'none';
-        dateLabel.innerHTML = "Fecha en que recibiste el producto";
+        forSubsidiary.style.display = "none";
       } else {
-        document.querySelector('.forSubsidiary').style.display = 'block';
-        dateLabel.innerHTML = "Fecha en que adquiriste el producto";
+        forSubsidiary.style.display = "block";
       }
-  }
+    }
 
     // Hide the current card
     document.getElementById(`card-${currentCard}`).classList.remove("show-card");
@@ -312,9 +306,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
     folio.innerHTML = info.id; // Cambiar el número de folio
 
     // Cambiar mensaje whatsapp
-    const anchor = document.getElementById('whatsapp-anchor');
-    const url = `https://api.whatsapp.com/send?phone=522211939333&text=Genere un nuevo ticket, por *${info.mainReason}* y mi compra la realice en *PT${info.sucursal}*. Mi número de folio es *${info.id}*.`; // Cambiar el número de teléfono & el número de folio
-    anchor.href = url;
+    //const anchor = document.getElementById('whatsapp-anchor');
+    // const url = `https://api.whatsapp.com/send?phone=522211939333&text=Genere un nuevo ticket, por *${info.mainReason}* y mi compra la realice en *PT${info.sucursal}*. Mi número de folio es *${info.id}*.`; // Cambiar el número de teléfono & el número de folio
+    // anchor.href = url;
 
     showNextCard(3, 4);
   }
@@ -363,69 +357,103 @@ document.addEventListener("DOMContentLoaded", (event) => {
   // Show the first card on page load
   cards[0].classList.add("show-card");
 
-  // Event listener for next buttons
-  nextButtons.forEach(button => {
-    button.addEventListener("click", function() {
-        const currentCard = this.getAttribute("data-card");
-        const nextCard = parseInt(currentCard) + 1;
+  // Get elements
+const fileInput = document.getElementById('file-input');
+const uploadButton = document.getElementById("upload-button");
+const fileList = document.getElementById('file-list');
+let files = [];
 
-        switch (currentCard) {
-            case '1':
-                const ticketNumber = document.getElementById('ticket-input').value;
-                const phoneNumber = document.getElementById('phone-number').value;
-                const subsidiary = document.getElementById('subsidiary-input').value;
 
-                if ( validateField(ticketNumber, "Número de Ticket") &&
-                     validateField(phoneNumber, "Número de Teléfono") &&
-                     validateField(subsidiary, "Lugar de Compra")) {
+// Utility functions
+const createFileItem = (fileName) => {
+    const fileItem = document.createElement("p");
+    fileItem.classList.add("file-item");
+    fileItem.textContent = fileName;
+    return fileItem;
+};
 
-                    data_to_save.ticket_number = ticketNumber;
-                    data_to_save.phone_number = phoneNumber;
-                    data_to_save.subsidiary = subsidiary;
-                }
+const displayFiles = () => {
+    fileList.innerHTML = ""; // Clear previous list
+    files.forEach(file => fileList.appendChild(createFileItem(file.name)));
+};
 
-                showNextCard(currentCard, nextCard);
+const updateFiles = async () => {
+  files = await Promise.all(Array.from(fileInput.files).map(async (file) => {
+    const arrayBuffer = await file.arrayBuffer();
+    const blob = new Blob([arrayBuffer], { type: file.type });
 
-                break;
+    // Use a FileReader to convert the blob to base64
+    const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(",")[1]); // Remove the "data:*/*;base64," prefix
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+    });
 
-            case '2':
-                const subsidiaryValue = document.getElementById('subsidiary-input').value;
-                const orderNumber = document.getElementById('order-input').value;
-                data_to_save.explanation = document.getElementById('commentaries').value;
-                const dateProductArrived = document.getElementById('date-input').value;
-                const mainReason = document.getElementById('reason-input').value;
-                const clientNumber = document.getElementById('client-number').value;
+    return {
+        arrayBuffer: base64,
+        name: file.name,
+    };
+  }));
 
-                if (subsidiaryValue == "En Linea") {
-                  if (validateField(orderNumber, "Número de Orden")) {
-                    data_to_save.order_number = orderNumber;
-                  } else {
-                    break;
-                  }
-                }
+  displayFiles();
+};
 
-                if (validateField(clientNumber, "Número de Cliente") &&
-                    validateField(mainReason, "Motivo de Devolución") &&
-                    validateField(dateProductArrived, "Fecha de Recepción del Producto")
-                  ) {
-
-                    data_to_save.client_number = clientNumber;
-                    data_to_save.main_reason = mainReason;
-                    data_to_save.date_product_arrived = dateProductArrived + " 00:00:00.000";
-
-                    showNextCard(currentCard, nextCard);
-                }
-
-                break;
-
-            case '3':
-                if (validateItems()) {
-                    sendData();
-                }
-                break;
+const saveFormData = (fields) => {
+    fields.forEach(({ elementId, key, label }) => {
+        const value = document.getElementById(elementId).value;
+        if (validateField(value, label)) {
+            data_to_save [key] = value;
+        } else {
+            throw new Error(`Validation failed for field: ${label}`);
         }
     });
-  });
+};
+
+// Event listeners
+uploadButton.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", updateFiles);
+
+nextButtons.forEach(button => {
+    button.addEventListener("click", function() {
+        const currentCard = parseInt(this.getAttribute("data-card"));
+        const nextCard = currentCard + 1;
+
+        try {
+            switch (currentCard) {
+                case 1:
+                    saveFormData([
+                        { elementId: 'ticket-input', key: 'ticket_number', label: 'Número de Ticket' },
+                        { elementId: 'phone-number', key: 'phone_number', label: 'Número de Teléfono' },
+                        { elementId: 'subsidiary-input', key: 'subsidiary', label: 'Sucursal' }
+                    ]);
+                    showNextCard(currentCard, nextCard);
+                    break;
+
+                case 2:
+                    saveFormData([
+                        { elementId: 'reason-input', key: 'main_reason', label: 'Motivo de Devolución' },
+                        { elementId: 'client-number', key: 'client_number', label: 'Número de Cliente' },
+                        { elementId: 'commentaries', key: 'explanation', label: 'Explicación' },
+                        { elementId: 'date-input', key: 'date_product_arrived', label: 'Fecha de llegada' }
+                    ]);
+                    data_to_save.order_number = document.getElementById('order-input').value;
+                    data_to_save.files = files;
+                    showNextCard(currentCard, nextCard);
+                    break;
+
+                case 3:
+                    if (validateItems()) {
+                        sendData();
+                    }
+                    break;
+            }
+        } catch (error) {
+            console.error(error.message);
+        }
+    });
+});
 
   function validateItems() {
     if (data_to_save.items.length <= 0){
@@ -524,5 +552,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
       }
     });
   });
+
+  console.log("All in One");
 
 });

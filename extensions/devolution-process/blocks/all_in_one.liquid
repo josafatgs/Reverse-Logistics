@@ -5,11 +5,11 @@
     <div class="card show-card first-card" id="card-1">
         <h1>{{ block.settings.title_message_choose }}</h1>
         <p>{{ block.settings.message_tooltip }}</p>
-        <span>Escribe el número de ticket para comenzar</span>
+        <span>Escribe el número de orden para comenzar</span>
         <div class="tooltip ticket__number">
           <span>{{ block.settings.tooltiptext }}</span>
           <span class="tooltiptext">
-            <img src={{ 'img_ticket_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
+            <img src={{ 'img_order_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticket example">
           </span>
         </div>
         <div class="returnment-container">
@@ -26,6 +26,7 @@
                     <option value="Queretaro">PT Toreo</option>
                     <option value="Queretaro">PT Coacalco</option>
                 </select>
+
                 <button id="next-card" class="first-button-next" data-card="1">Devolver</button>
                 <button id="check_button_opt"> {{ block.settings.option_check }} </button>
             </div>
@@ -35,22 +36,21 @@
     <div class="card" id="card-2">
 
         <div class="card-question-body forSubsidiary">
-            <div class="card-header">
-                <h5> Número de Orden</h5>
-                <div class="tooltip order__number">
+          <div class="card-header">
+              <h5> Número de Orden</h5>
+              <div class="tooltip order__number">
                 <span>{{ block.settings.tooltiptext }}</span>
                 <span class="tooltiptext">
                     <img src={{ 'img_order_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
                 </span>
-                </div>
-            </div>
-            <div class="card-question">
-                <div class="input-bar">
-                    <input type="text" id="order-input" placeholder="Número de Orden">
-                </div>
-            </div>
+              </div>
+          </div>
+          <div class="card-question">
+              <div class="input-bar">
+                  <input type="text" id="order-input" placeholder="Número de Orden">
+              </div>
+          </div>
         </div>
-
 
         <div class="card-question-body">
             <div class="card-header">
@@ -80,7 +80,7 @@
                         <option value="Paquete dañado" selected>Paquete dañado</option>
                         <option value="Producto incorrecto">Producto incorrecto</option>
                         <option value="Pedido incompleto" >Pedido incompleto</option>
-                        <option value="Iniciar garantía">Garantía</option>
+                        <option value="Garantía">Garantía</option>
                     </select>
                 </div>
             </div>
@@ -101,7 +101,7 @@
 
         <div class="card-question-body">
             <div class="card-header">
-                <h5 id="date-arrived-label">Fecha en que recibío el producto</h5>
+                <h5 id="date-arrived-label">Fecha en que recibío el producto (Paquetería o Vendedor le entrego)</h5>
                 {%  comment  %} Intentar Obtener La Fecha desde Envía {% endcomment %}
             </div>
 
@@ -116,12 +116,18 @@
           <div class="card-header">
               <h5> Sube tus evidencias </h5>
           </div>
-          <div class="card-question">
+          <div class="card-question" style="flex-flow: column;">
               <div class="input-bar">
-                  <input type="file" id="file-input" accept="image/*" multiple>
+                  <input type="file" id="file-input" accept="image/*" multiple style="display: none;">
+                  <button id="upload-button" class="button-file">Selecciona archivos</button>
+              </div>
+              <div id="file-list" class="file-list">
+
               </div>
           </div>
         </div>
+
+
 
         <div class="card-button">
             <button id="previus-card" data-card="2">Atrás</button>
@@ -177,17 +183,15 @@
     <div id="loading-spinner" class="loading-spinner" style="display: none;"></div>
 
     <div class="card" id="card-4">
-        <h1> Solicitud Exitosa</h1>
 
-        <div class="card-question">
-
+        <div class="card-question" style="flex-flow: column;">
+            <h1> Solicitud Exitosa</h1>
             <div class="sucess-info">
                 <p>{{ block.settings.ticket_sucess }}</p>
                 <p>{{ block.settings.ticket_next_steps }}</p>
-                <P>Folio: <strong id="folio-number"> </strong> </P>
+                <P>Folio: <strong id="folio-number" style="font-size: xx-large;"> </strong> </P>
                 <br>
                 <br>
-                <a class="whatsapp-continue" id="whatsapp-anchor" type="button" target="_blank" href="#">{{ block.settings.button_cta }}</a>
             </div>
             <div class="error-info">
               <p>Upps.. </p>
@@ -198,7 +202,6 @@
 
   </div>
 
-  {% comment %} Search Container {% endcomment %}
   <div class="main-section-container not-show">
 
     <div class="title-section">
@@ -283,10 +286,10 @@
 
 {% schema %}
   {
-    "name": "Ticket Two in One",
+    "name": "All in One",
     "target": "section",
-    "stylesheet": "code_two_in_one.min.css",
-    "javascript": "code_two_in_one.min.js",
+    "stylesheet": "code_two_in_one.css",
+    "javascript": "code_two_in_one_v2.js",
     "settings": [
       {
         "type": "text",

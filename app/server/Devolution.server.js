@@ -3,6 +3,8 @@ import db from "../db.server";
 export async function createDevolution(devolutionData) {
   try {
 
+    console.log(JSON.stringify(devolutionData, null, 2));
+
     const res = await db.devolution.create({
         data: {
             sucursal: devolutionData.subsidiary,
@@ -10,7 +12,7 @@ export async function createDevolution(devolutionData) {
             explanation: devolutionData.explanation,
             ticketNumber: devolutionData.ticket_number,
             clientNumber: devolutionData.client_number,
-            orderNumber: devolutionData.order_number != "" ? devolutionData.order_number : 0,
+            orderNumber: devolutionData.order_number != "" ? devolutionData.order_number : "",
             dateProductArrive: new Date(devolutionData.date_product_arrived),
             contacto: devolutionData.phone_number,
         },
@@ -22,15 +24,25 @@ export async function createDevolution(devolutionData) {
         devolutionId: res.id,
     }));
 
+    const images = await Promise.all(devolutionData.files.map(async (fileData) => ({
+        image: Buffer.from(await fileData.arrayBuffer, 'base64'),
+        imageName: fileData.name,
+        devolutionId: res.id,
+    })));
+
     await db.devolution_Item.createMany({
-        data: itemsData,
+      data: itemsData,
     });
 
-    console.log(res);
+    await db.devolutionImage.createMany({
+      data: images,
+    });
+
+    //console.log(res);
     return res;
 
   } catch (error) {
-      console.error('Error creating devolution:', error);
+      console.log('Error creating devolution:', error);
       return null;
   }
 
@@ -58,10 +70,11 @@ export async function getDevolutionById(devolutionId, graphql) {
               createdAt: 'desc',
             },
           },
+          images: true,
         },
       });
 
-      console.log(devolution);
+      // console.log(devolution);
 
       return devolution;
 
@@ -81,13 +94,13 @@ export async function updateStatus(devolutionId, status) {
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -103,13 +116,13 @@ export async function updateSubsidiary(devolutionId, subsidiary) {
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -127,13 +140,13 @@ export async function updateShippingPayment(devolutionId, shippingPayment) {
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -152,13 +165,13 @@ export async function updateRequiresLabel(devolutionId, requiereLabel) {
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -175,13 +188,13 @@ export async function updateCreditNote(devolutionId, ndc) {
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -196,13 +209,13 @@ export async function updateWallet(devolutionId, wallet){
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -216,13 +229,13 @@ export async function updateValue(devolutionId, value){
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -236,13 +249,13 @@ export async function updateComentarios(devolutionId, comentarios){
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -256,13 +269,13 @@ export async function updateSubsidiaryToGo(devolutionId, subsidiaryToGo){
         });
 
         // Delete on Production
-        console.log(res);
+        // console.log(res);
         return res;
 
     } catch (error) {
 
         // Delete on Production
-        console.error('Error fetching devolution:', error);
+        // console.error('Error fetching devolution:', error);
         return null;
 
     }
@@ -290,11 +303,13 @@ export async function addEvent(ticketId, description, date) {
       },
     });
 
-    console.log('Event created successfully:', newEvent);
+    // console.log('Event created successfully:', newEvent);
     return newEvent;
 
   } catch (error) {
-    console.log('Event Error', error);
+    // console.log('Event Error', error);
     return error;
   }
 }
+
+

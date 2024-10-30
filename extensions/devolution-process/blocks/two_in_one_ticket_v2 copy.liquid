@@ -5,16 +5,16 @@
     <div class="card show-card first-card" id="card-1">
         <h1>{{ block.settings.title_message_choose }}</h1>
         <p>{{ block.settings.message_tooltip }}</p>
-        <span>Escribe el número de ticket para comenzar</span>
+        <span>Escribe el número de orden para comenzar</span>
         <div class="tooltip ticket__number">
           <span>{{ block.settings.tooltiptext }}</span>
           <span class="tooltiptext">
-            <img src={{ 'img_ticket_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
+            <img src={{ 'img_order_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticket example">
           </span>
         </div>
         <div class="returnment-container">
             <div class="returnment-bar">
-                <input type="text" id="ticket-input" placeholder="Número de Ticket" required>
+                <input type="text" id="order-input" placeholder="Número de Orden" required>
                 <input type="text" id="phone-number" placeholder="Teléfono" requfired>
                 <select id="subsidiary-input" name="select" required>
                     <option value="---" selected>¿Donde comprate?</option>
@@ -33,24 +33,6 @@
     </div>
 
     <div class="card" id="card-2">
-
-        <div class="card-question-body forSubsidiary">
-            <div class="card-header">
-                <h5> Número de Orden</h5>
-                <div class="tooltip order__number">
-                <span>{{ block.settings.tooltiptext }}</span>
-                <span class="tooltiptext">
-                    <img src={{ 'img_order_number.png' | asset_url }} height="600px" width="fit-content" alt="client ticker example">
-                </span>
-                </div>
-            </div>
-            <div class="card-question">
-                <div class="input-bar">
-                    <input type="text" id="order-input" placeholder="Número de Orden">
-                </div>
-            </div>
-        </div>
-
 
         <div class="card-question-body">
             <div class="card-header">
@@ -80,7 +62,7 @@
                         <option value="Paquete dañado" selected>Paquete dañado</option>
                         <option value="Producto incorrecto">Producto incorrecto</option>
                         <option value="Pedido incompleto" >Pedido incompleto</option>
-                        <option value="Iniciar garantía">Garantía</option>
+                        <option value="Garantía">Garantía</option>
                     </select>
                 </div>
             </div>
@@ -88,40 +70,61 @@
 
 
         <div class="card-question-body">
-            <div class="card-header">
-                <h5> Comentarios</h5>
+            <div class="card-header" id="header-specif-reason">
+                <h5> Motivos Especificos</h5>
             </div>
             <div class="card-question">
-                <div class="input-bar">
-                    <textarea name="textarea" id="commentaries" cols="60" rows="10"></textarea>
+                <div style="display: flex; flex-flow:column; width: 100%;">
+                    <div class="checkbox__list" id="checkbox_list_package">
+                      <label><input type="checkbox" value="Paquete abierto">Paquete Abierto</label>
+                      <label><input type="checkbox" value="Paquete con sellos de seguridad violados">Paquete C/Cinta Seguridad Abierta</label>
+                      <label><input type="checkbox" value="Paquete aplastado">Paquete aplastado</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_product">
+                      <label><input type="checkbox" value="Pedí el producto incorrrecto">Pedí el producto incorrecto</label>
+                      <label><input type="checkbox" value="Producto mal etiquetado">Mal etiquetado</label>
+                      <label><input type="checkbox" value="Producto enviado incorrectamente">Envío incorrecto</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_display">
+                      <label><input type="checkbox" value="Pantalla no funciona bien">Display: Pantalla no funciona bien</label>
+                      <label><input type="checkbox" value="Pantalla tiene rayas o manchas">Display: Pantalla tiene rayas o manchas</label>
+                      <label><input type="checkbox" value="Pantalla se apaga sola">Display: Pantalla se apaga sola</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_battery">
+                      <label><input type="checkbox" value="Batería se descarga rápido o está dañada">Batería: Se descarga rápido o está dañada</label>
+                      <label><input type="checkbox" value="Batería no carga">Batería: No carga</label>
+                      <label><input type="checkbox" value="Batería se sobrecalienta">Batería: Se sobrecalienta</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_touch">
+                      <label><input type="checkbox" value="Pantalla táctil no responde bien">Touch: No responde bien</label>
+                      <label><input type="checkbox" value="Pantalla táctil tiene áreas muertas">Touch: Tiene áreas muertas</label>
+                      <label><input type="checkbox" value="Pantalla táctil registra toques fantasma">Touch: Registra toques fantasma</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_accesories">
+                      <label><input type="checkbox" value="Accesorios no funcionan o están defectuosos">Accesorios: No funcionan o están defectuosos</label>
+                      <label><input type="checkbox" value="Accesorios no son compatibles">Accesorios: No son compatibles</label>
+                      <label><input type="checkbox" value="Accesorios se rompieron">Accesorios: Se rompieron</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_resource">
+                      <label><input type="checkbox" value="Insumos caducados">Insumos: Caducados</label>
+                    </div>
+
+                    <div class="checkbox__list" id="checkbox_list_tools">
+                      <label><input type="checkbox" value="Herramientas se rompieron o no funcionan bien">Herramientas: Se rompieron o no funcionan bien</label>
+                      <label><input type="checkbox" value="Herramientas tienen partes sueltas">Herramientas: Tienen partes sueltas</label>
+                      <label><input type="checkbox" value="Herramientas no cumplen su función">Herramientas: No cumplen su función</label>
+                    </div>
                 </div>
             </div>
         </div>
 
 
-        <div class="card-question-body">
-            <div class="card-header">
-                <h5 id="date-arrived-label">Fecha en que recibío el producto</h5>
-                {%  comment  %} Intentar Obtener La Fecha desde Envía {% endcomment %}
-            </div>
-
-            <div class="card-question">
-                <div class="input-bar">
-                    <input id="date-input" type="date">
-                </div>
-            </div>
-        </div>
-
-        <div class="card-question-body">
-          <div class="card-header">
-              <h5> Sube tus evidencias </h5>
-          </div>
-          <div class="card-question">
-              <div class="input-bar">
-                  <input type="file" id="file-input" accept="image/*" multiple>
-              </div>
-          </div>
-        </div>
 
         <div class="card-button">
             <button id="previus-card" data-card="2">Atrás</button>
@@ -198,7 +201,6 @@
 
   </div>
 
-  {% comment %} Search Container {% endcomment %}
   <div class="main-section-container not-show">
 
     <div class="title-section">
@@ -283,10 +285,10 @@
 
 {% schema %}
   {
-    "name": "Ticket Two in One",
+    "name": "All in One Version",
     "target": "section",
     "stylesheet": "code_two_in_one.min.css",
-    "javascript": "code_two_in_one.min.js",
+    "javascript": "code_two_in_one_v2.min.js",
     "settings": [
       {
         "type": "text",

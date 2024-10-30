@@ -11,7 +11,7 @@ generator client {
 datasource db {
   provider = "mysql"
   //url = env("DATABASE_URL") // Use this one just to update the schemas
-  url      = env("DATABASE_URL_SHOPI")  // Use this one to connect to the database, the other one fails
+  url      = env("DEV_DATABASE_USER")  // Use this one to connect to the database, the other one fails
 }
 
 model Session {
@@ -44,16 +44,17 @@ model Devolution{
   items             Devolution_Item[]
   createdAt         DateTime @default(now())
   returnmentLabel   String   @default("")
-  dateProductArrive DateTime
-  shippingPayment   Boolean @default(false)
-  requiresLabel     Boolean @default(false)
-  comentarios       String  @default("")
-  ndc               String  @default("")
-  monedero          String  @default("")
-  value             Float   @default(0)
-  contacto          String  @default("")
-  subsidiaryToGo    String  @default("")
+  dateProductArrive DateTime @default(now())
+  shippingPayment   Boolean  @default(false)
+  requiresLabel     Boolean  @default(false)
+  comentarios       String   @default("")
+  ndc               String   @default("")
+  monedero          String   @default("")
+  value             Float    @default(0)
+  contacto          String   @default("")
+  subsidiaryToGo    String   @default("")
   event             Event[]
+  images            DevolutionImage[]
 }
 
 model Devolution_Item{
@@ -64,11 +65,19 @@ model Devolution_Item{
   quantity      Int
 }
 
-
 model Event{
   id            Int @id @default(autoincrement())
   devolution    Devolution @relation(fields: [devolutionId], references: [id])
   devolutionId  Int
   description   String
   createdAt     DateTime @default(now())
+}
+
+model DevolutionImage{
+  id           Int      @id @default(autoincrement())
+  devolution   Devolution @relation(fields: [devolutionId], references: [id])
+  devolutionId Int
+  image        Bytes
+  imageName    String
+  createdAt    DateTime @default(now())
 }

@@ -14,7 +14,6 @@ export const loader = async ({ request, params }) => {
     return new Response("Unauthorized", { status: 401 });
   }
 
-
   if ( request.method == "GET") {
     console.log("GET request");
 

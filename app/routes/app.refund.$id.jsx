@@ -27,6 +27,10 @@ import {
   List,
   RadioButton
 } from "@shopify/polaris";
+import {
+  SaveBar,
+  useAppBridge
+} from '@shopify/app-bridge-react';
 
 import { authenticate } from "../shopify.server";
 
@@ -170,11 +174,25 @@ export async function action({ request, params }) {
 
 export default function Refund() {
 
+  const shopify = useAppBridge()
+
   const { devolution, itemDetails } = useLoaderData();
+
+  console.log(devolution);
+
+  const handleDiscard = () => {
+    shopify.saveBar.hide('my-save-bar');
+  };
+
+  const showSaveBar = () => {
+    shopify.saveBar.show('my-save-bar');
+  };
 
   const fetcher = useFetcher();
 
   const handleSave = () => {
+    shopify.saveBar.hide('my-save-bar');
+
     fetcher.submit(
       {
         actionType: "updateDevolution",
@@ -224,27 +242,22 @@ export default function Refund() {
 
   // ================== END DEVOLUTION SECTION ========================
 
-  // Show Modal to Save Info
-  const [saveModal, setSaveModal] = useState(false);
-  const handlerSaveModal = useCallback(() => setSaveModal((saveModal) => !saveModal), []);
-
 
   const handleArticlesList = devolution.items.map((item, index) => {
     try {
-      // Encontrar el item por SKU
+
       const foundItem = itemDetails.find(detail => detail[item.sku] !== undefined);
 
       if (!foundItem) {
         console.error(`Item con SKU ${item.sku} no encontrado en itemDetails.`);
-        return null; // Salir temprano si no se encuentra el item
+        return null;
       }
 
-      // Extraer los datos asegurándose de que las propiedades existan
       const productData = foundItem[item.sku]?.products?.edges?.[0]?.node;
 
       if (!productData) {
         console.error(`Datos del producto para SKU ${item.sku} no encontrados.`);
-        return null; // Salir temprano si no se encuentran los datos del producto
+        return null;
       }
 
       const price = productData.variants?.edges?.[0]?.node?.price ?? 'N/A';
@@ -255,9 +268,12 @@ export default function Refund() {
       //console.log(productData);
 
       return Products(item.quantity, url, alt, price, title, index);
+
     } catch (error) {
+
       console.error(`Error procesando el item con SKU ${item.sku}:`, error);
       return null; // En caso de error, retorna null para evitar fallos en el renderizado
+
     }
   });
 
@@ -292,6 +308,7 @@ export default function Refund() {
 
   const [subsidiarySelected, setSubsidiarySelected] = useState(devolution.sucursal);
   const subsidiaryOptions = [
+    { label: 'En Linea', value: 'En Linea' },
     { label: 'Cedis', value: 'Cedis' },
     { label: 'Puebla', value: 'Puebla' },
     { label: 'Queretaro', value: 'Queretaro' },
@@ -308,10 +325,15 @@ export default function Refund() {
   // ================== RESOLUTION SECTION ============================
 
   const [creditNoteText, setCreditNoteText] = useState(devolution.ndc);
-  const handleCreditNoteText = useCallback((value) => setCreditNoteText(value), []);
+  const handleCreditNoteText = useCallback((value) => {
+    setCreditNoteText(value);
+    setWalletText("");
+  }, []);
 
-  const [walletText, setwalletText] = useState(devolution.monedero);
-  const handleWalletText = useCallback((value) => setwalletText(value), []);
+  const [walletText, setWalletText] = useState(devolution.monedero);
+  const handleWalletText = useCallback((value) => {
+    setWalletText(value); setCreditNoteText("");
+  }, []);
 
   const [moneyText, setMoneyText] = useState(devolution.value);
   const handleMoneyText = useCallback((value) => setMoneyText(value), []);
@@ -404,7 +426,7 @@ export default function Refund() {
               backgroundColor: '#374151', // bg-gray-700
             }}
             ></div>
-            
+
           </div>
           <div>
             <Text variant='bodyMd' fontWeight='medium'>{description}</Text>
@@ -473,12 +495,18 @@ export default function Refund() {
       }
       subtitle={formatDate(devolution.createdAt)}
       primaryAction={
-        <Button variant="primary" onClick={handleSave}>Guardar</Button>
+        <Button variant="primary" onClick={showSaveBar}>Guardar</Button>
       }
     >
+
+      <SaveBar id="my-save-bar">
+        <button variant="primary" onClick={handleSave}></button>
+        <button onClick={handleDiscard}></button>
+      </SaveBar>
+
       <Layout>
         <Layout.Section>
-          <Card>
+          <Card >
 
             {stateSelected == "Pendiente" ? (
               <Badge progress="complete" tone="critical">{stateSelected}</Badge>
@@ -526,41 +554,20 @@ export default function Refund() {
 
               <Divider />
 
-              <Box padding="200">
+              <Box paddingBlockEnd={'200'}>
 
-                {/* <Box paddingBlock="200">
-                  <InlineGrid columns={['oneHalf', 'oneHalf']}>
-                    <Grid.Cell >
-                      <Text as="p" variant="bodySm">
-                        SKU
-                      </Text>
-                    </Grid.Cell>
-                    <Grid.Cell>
-                      <Text as="p" variant="bodySm">
-                        Pza
-                      </Text>
-                    </Grid.Cell>
-                    <Divider borderColor="transparent" borderWidth={'100'} />
-                    <Divider borderColor="transparent" borderWidth={'100'} />
-                    <Divider borderColor="transparent" borderWidth={'100'} />
-                    <Divider borderColor="transparent" borderWidth={'100'} />
-                    {handleArticles}
-                  </InlineGrid>
-                </Box> */}
-
-                <Box paddingBlock="200">
+                <Box>
                   { handleArticlesList }
                 </Box>
 
               </Box>
-
-              <Divider />
 
             </Box>
 
 
           </Card>
 
+          {/*
           <Divider borderColor="transparent" borderWidth={'100'} />
           <Divider borderColor="transparent" borderWidth={'100'} />
           <Divider borderColor="transparent" borderWidth={'100'} />
@@ -577,6 +584,7 @@ export default function Refund() {
             subsidiarySelected={devolutionSubsidiarySelected}
             handleSubsidiarySelected={handleDevolutionSubsidiarySelected}
           />
+          */}
 
           <Divider borderColor="transparent" borderWidth={'100'} />
           <Divider borderColor="transparent" borderWidth={'100'} />
@@ -598,7 +606,7 @@ export default function Refund() {
                             value={creditNoteText}
                             onChange={handleCreditNoteText}
                             autoComplete="off"
-                            placeholder="# Nota de Credito"
+                            placeholder="#"
                           />
                         </Grid.Cell>
 
@@ -608,7 +616,7 @@ export default function Refund() {
                             value={walletText}
                             onChange={handleWalletText}
                             autoComplete="off"
-                            placeholder="# Monedero"
+                            prefix="#"
                           />
                         </Grid.Cell>
                       </InlineGrid>
@@ -620,7 +628,7 @@ export default function Refund() {
                             value={moneyText}
                             onChange={handleMoneyText}
                             autoComplete="off"
-                            placeholder="$ MXN"
+                            prefix="$ MXN"
                           />
                         </Grid.Cell>
                       </InlineGrid>
